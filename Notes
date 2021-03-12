@@ -1,0 +1,36 @@
+Project Proposal
+
+Project Name: Taxi & Minibus Website
+
+Description: A booking system for a taxi/minibus hire
+
+Requirements:
+
+Database: Save customer information. E.g. Customer contact, previous trips, payment methods, bookings.
+Database: Login information segregated between customers and staff.
+Database: Driver information. E.g. Legal information, driving licence, taxi badge.
+Database: Vehicle information. E.g. Service history, miles driven, date of purchase.
+
+################################
+
+Customer Login Page. This will allow customer to login and view past booking and create a booking
+
+Staff/Admin Login Page: This will allow staff members to view all booking information and all databases.
+Possibly a tiered login system depending on the staff member credentials, allowing access at different levels. 
+Also, need to have a system to edit databases
+
+Sign Up Page- Admin will take a call from customer then use your system to book them in
+
+Pages for displaying important information. Home Page, About Us, Fleet Page, Contact Us.
+
+Home Page – Link into the login page, sign up page, important information page and pricing quote page.
+
+################################
+
+Automated pricing system. When a customer enters journey details, it provides customer with a cost of journey based the journey information inputted in quote form
+
+Email Integration System – Once a customer fills the quote on the website. Two emails need to be sent. One to the customer and One to the business.
+
+Map Imbedded on receipt of quote completion and on contact us page.
+
+Confirmation Page after booking is placed on the website.
