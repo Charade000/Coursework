@@ -17,8 +17,6 @@ class Home():
         root2.resizable(width=False, height=False)
         muGUI=loginWindow(root2)
 
-    dff
-    jkbjhvghv
     def sign_up(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
