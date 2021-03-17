@@ -7,15 +7,16 @@ class Home():
         self.master.title("Taxi And Minibus")
         self.master.configure(background='turquoise3')
         self.master.attributes("-fullscreen", True)
-        self.master.bind("<F11>", self.toggle_fullscreen)#TODO Make Button
+        self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
 
+        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
         self.Login_B=Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
         self.SignUp_B=Button(self.master,text='Sign Up',command=self.sign_up,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
         self.About_B=Button(self.master,text='About',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
 
     def toggle_fullscreen(self, event=None):
-        self.state = not self.state  # Just toggling the boolean
+        self.state = not self.state   # Just toggling the boolean
         self.master.attributes("-fullscreen", self.state)
         return "break"
 
@@ -111,8 +112,7 @@ class aboutWindow():
 def main():
     root=Tk()
     myGUIWelcome=Home(root)
-    root.resizable(width=False, height=False)
-    # root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     root.mainloop()
 
 if __name__ == '__main__':
