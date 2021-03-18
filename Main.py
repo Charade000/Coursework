@@ -49,7 +49,6 @@ class Home():
 class loginWindow():
     def __init__(self, master):
         self.master = master
-        self.master.geometry('610x780')
         self.master.title("Login")
         self.master.configure(background='turquoise3')
         
@@ -84,13 +83,12 @@ class loginWindow():
     def adminlogin(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=Admin_Window(root2)
         
 class Admin_Window():
     def __init__(self, master):
         self.master = master
-        self.master.geometry('610x780')
         self.master.title("Admin Login")
         self.master.configure(background='turquoise3')
         
@@ -116,7 +114,6 @@ class Admin_Window():
 class signupWindow():
     def __init__(self, master):
         self.master = master
-        self.master.geometry('610x780')
         self.master.title("Sign Up")
         self.master.configure(background='turquoise3')
         
@@ -150,7 +147,6 @@ class signupWindow():
 class aboutWindow():
     def __init__(self, master):
         self.master = master
-        self.master.geometry('610x780')
         self.master.title("About")
         self.master.configure(background='turquoise3')
         self.master.bind("<F11>", self.toggle_fullscreen)
