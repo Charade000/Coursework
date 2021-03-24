@@ -61,8 +61,7 @@ class loginWindow():
 
         self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
         self.Back_B=Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        self.adminButton=Button(self.master,text='Admin',command=self.adminlogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
-        self.LoginButton=Button(self.master,text='Login',command=self.adminlogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        self.LoginButton=Button(self.master,text='Login',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
 
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -79,37 +78,8 @@ class loginWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=Home(root2)
-    
-    def adminlogin(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=Admin_Window(root2)
         
-class Admin_Window():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Admin Login")
-        self.master.configure(background='turquoise3')
         
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        
-
-        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
-
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"
 
 class signupWindow():
     def __init__(self, master):
