@@ -7,13 +7,11 @@ Description: A booking system for a taxi/minibus hire
 Requirements:
 
 Database: Save customer information. E.g. Customer contact, previous trips, payment methods, bookings.
-Database: Login information segregated between customers and staff.
+Database: Login information for staff.
 Database: Driver information. E.g. Legal information, driving licence, taxi badge.
 Database: Vehicle information. E.g. Service history, miles driven, date of purchase.
 
 ################################
-
-Customer Login Page. This will allow customer to login and view past booking and create a booking
 
 Staff/Admin Login Page: This will allow staff members to view all booking information and all databases.
 Possibly a tiered login system depending on the staff member credentials, allowing access at different levels. 
