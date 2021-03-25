@@ -61,7 +61,7 @@ class loginWindow():
 
         self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
         self.Back_B=Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        self.LoginButton=Button(self.master,text='Login',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        self.LoginButton=Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         
         self.emailLabel=Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=5)
         self.passwordLabel=Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=5)
@@ -85,6 +85,15 @@ class loginWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=Home(root2)
+    
+    def checkLogin(self):
+        
+        pass
+        # db =sqlite3.connect("vet.db")
+        # cursor = db.cursor()
+        # sql = "SELECT COUNT(*) FROM Pet"
+        # cursor.execute(sql)
+        # noOfPetRecords = cursor.fetchone()[0]
         
         
 
@@ -148,8 +157,8 @@ class aboutWindow():
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
-        root2.geometry("200x{1}+0+0".format(root2.winfo_screenheight()))
-#       root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        # root2.geometry("200x{1}+0+0".format(root2.winfo_screenheight()))
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
 
         muGUI=Home(root2)
 
