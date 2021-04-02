@@ -1,10 +1,14 @@
 from tkinter import *
+import sqlite3
 
 class Home():
     def __init__(self, master):
         self.master = master
         self.master.title("Taxi And Minibus")
         self.master.configure(background='turquoise3')
+        
+        # Creating Database
+        self.createVetTable("Customers")
         
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
@@ -47,7 +51,32 @@ class Home():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=aboutWindow(root2)
+        
+        
+        
+    def getTables(self,dbName):
+        db =sqlite3.connect(dbName)
+        cursor = db.cursor()
+        sql =  "SELECT name FROM sqlite_master WHERE type='table'"
+        cursor.execute(sql)
 
+        names = [row[0] for row in cursor.fetchall()]
+        return names
+
+    def createVetTable(self,dbName):
+        if 'Vet' in self.getTables(dbName):
+            print ("Vet table already exists")
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Customer(
+                    CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Forename TEXT NOT NULL,
+                    Surname TEXT NOT NULL,
+                    TelephoneNo TEXT NOT NULL)"""
+                cursor.execute(sql)
+                db.commit()
+                
 
 class loginWindow():
     def __init__(self, master):
