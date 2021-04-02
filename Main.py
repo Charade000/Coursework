@@ -8,7 +8,12 @@ class Home():
         self.master.configure(background='turquoise3')
         
         # Creating Database
-        self.createVetTable("Customers")
+        self.createCustomerTable("Customers.db")
+        self.createLoginTable("Login.db")
+        self.createBookingsTable("Bookings.db")
+        self.createVehicleTable("Vehicle.db")
+        self.createStaffTable("Staff.db")
+
         
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
@@ -52,8 +57,7 @@ class Home():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=aboutWindow(root2)
         
-        
-        
+    # Finding The Databases
     def getTables(self,dbName):
         db =sqlite3.connect(dbName)
         cursor = db.cursor()
@@ -63,9 +67,10 @@ class Home():
         names = [row[0] for row in cursor.fetchall()]
         return names
 
-    def createVetTable(self,dbName):
-        if 'Vet' in self.getTables(dbName):
-            print ("Vet table already exists")
+    # Creating All The Databases Or Checking If They Exist
+    def createCustomerTable(self,dbName):
+        if 'Customer' in self.getTables(dbName):
+            print ("\nVet Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -76,7 +81,59 @@ class Home():
                     TelephoneNo TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
-                
+    def createLoginTable(self,dbName):
+        if 'Login' in self.getTables(dbName):
+            print ("\nLogin Table Already Exists")
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Login(
+                    LoginID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Forename TEXT NOT NULL,
+                    Surname TEXT NOT NULL,
+                    TelephoneNo TEXT NOT NULL)"""
+                cursor.execute(sql)
+                db.commit()
+    def createBookingsTable(self,dbName):
+        if 'Bookings' in self.getTables(dbName):
+            print ("\nBookings Table Already Exists")
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Bookings(
+                    BookingsID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Forename TEXT NOT NULL,
+                    Surname TEXT NOT NULL,
+                    TelephoneNo TEXT NOT NULL)"""
+                cursor.execute(sql)
+                db.commit()
+    def createVehicleTable(self,dbName):
+        if 'Vehicle' in self.getTables(dbName):
+            print ("\nVehicle Table Already Exists")
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Vehicle(
+                    VehicleID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Forename TEXT NOT NULL,
+                    Surname TEXT NOT NULL,
+                    TelephoneNo TEXT NOT NULL)"""
+                cursor.execute(sql)
+                db.commit()
+    def createStaffTable(self,dbName):
+        if 'Staff' in self.getTables(dbName):
+            print ("\nStaff Table Already Exists")
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Staff(
+                    StaffID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Forename TEXT NOT NULL,
+                    Surname TEXT NOT NULL,
+                    TelephoneNo TEXT NOT NULL)"""
+                cursor.execute(sql)
+                db.commit()
+
 
 class loginWindow():
     def __init__(self, master):
