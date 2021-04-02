@@ -8,11 +8,11 @@ class Home():
         self.master.configure(background='turquoise3')
         
         # Creating Database
-        self.createCustomerTable("Customers.db")
-        self.createLoginTable("Login.db")
-        self.createBookingsTable("Bookings.db")
-        self.createVehicleTable("Vehicle.db")
-        self.createStaffTable("Staff.db")
+        self.createCustomerTable("main.db")
+        self.createLoginTable("main.db")
+        self.createBookingsTable("main.db")
+        self.createVehicleTable("main.db")
+        self.createStaffTable("main.db")
 
         
         # Binding F11 and ESCAPE keys to full screen
@@ -56,21 +56,21 @@ class Home():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=aboutWindow(root2)
-        
+
+
     # Finding The Databases
     def getTables(self,dbName):
         db =sqlite3.connect(dbName)
         cursor = db.cursor()
         sql =  "SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(sql)
-
         names = [row[0] for row in cursor.fetchall()]
         return names
 
     # Creating All The Databases Or Checking If They Exist
     def createCustomerTable(self,dbName):
         if 'Customer' in self.getTables(dbName):
-            print ("\nVet Table Already Exists")
+            print ("\nCustomer Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -78,9 +78,16 @@ class Home():
                     CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Forename TEXT NOT NULL,
                     Surname TEXT NOT NULL,
-                    TelephoneNo TEXT NOT NULL)"""
+                    Email TEXT NOT NULL,
+                    MobileNum INTEGER NOT NULL,
+                    StreetNum INTEGER NOT NULL,
+                    StreetName TEXT NOT NULL,
+                    Town TEXT NOT NULL,
+                    Postcode TEXT NOT NULL)
+                    """
                 cursor.execute(sql)
                 db.commit()
+    
     def createLoginTable(self,dbName):
         if 'Login' in self.getTables(dbName):
             print ("\nLogin Table Already Exists")
@@ -89,11 +96,11 @@ class Home():
                 cursor=db.cursor()
                 sql ="""CREATE TABLE Login(
                     LoginID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Forename TEXT NOT NULL,
-                    Surname TEXT NOT NULL,
-                    TelephoneNo TEXT NOT NULL)"""
+                    StaffEmail TEXT NOT NULL,
+                    StaffPassword TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+    
     def createBookingsTable(self,dbName):
         if 'Bookings' in self.getTables(dbName):
             print ("\nBookings Table Already Exists")
@@ -102,11 +109,17 @@ class Home():
                 cursor=db.cursor()
                 sql ="""CREATE TABLE Bookings(
                     BookingsID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Forename TEXT NOT NULL,
-                    Surname TEXT NOT NULL,
-                    TelephoneNo TEXT NOT NULL)"""
+                    CustomerID INTEGER NOT NULL,
+                    Start TEXT NOT NULL,
+                    Destinantion TEXT NOT NULL,
+                    AmountPaid INTEGER NOT NULL,
+                    Fufilled TEXT NOT NULL,
+                    Date TEXT NOT NULL,
+                    Time TEXT NOT NULL,
+                    VehicleID INTEGER NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+    
     def createVehicleTable(self,dbName):
         if 'Vehicle' in self.getTables(dbName):
             print ("\nVehicle Table Already Exists")
@@ -115,11 +128,15 @@ class Home():
                 cursor=db.cursor()
                 sql ="""CREATE TABLE Vehicle(
                     VehicleID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Forename TEXT NOT NULL,
-                    Surname TEXT NOT NULL,
-                    TelephoneNo TEXT NOT NULL)"""
+                    MOT TEXT NOT NULL,
+                    Mileage INTEGER NOT NULL,
+                    Seats INTEGER NOT NULL,
+                    Make TEXT NOT NULL,
+                    Availability TEXT NOT NULL,
+                    StaffID  INTEGER NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+    
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
             print ("\nStaff Table Already Exists")
@@ -130,7 +147,14 @@ class Home():
                     StaffID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Forename TEXT NOT NULL,
                     Surname TEXT NOT NULL,
-                    TelephoneNo TEXT NOT NULL)"""
+                    Email TEXT NOT NULL,
+                    MobileNum INTEGER NOT NULL,
+                    Capabilities TEXT NOT NULL,
+                    Availability TEXT NOT NULL,
+                    StreetNum INTEGER NOT NULL,
+                    StreetName TEXT NOT NULL,
+                    Town TEXT NOT NULL,
+                    Postcode TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
 
@@ -183,7 +207,7 @@ class loginWindow():
     def checkLogin(self):
         
         pass
-        # db =sqlite3.connect("vet.db")
+        # db =sqlite3.connect("Login.db")
         # cursor = db.cursor()
         # sql = "SELECT COUNT(*) FROM Pet"
         # cursor.execute(sql)
