@@ -18,8 +18,8 @@ class Home():
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = False
-        self.master.attributes("-fullscreen", False)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
         
 
         # 'Home' Page Buttons
@@ -168,8 +168,8 @@ class loginWindow():
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = False
-        self.master.attributes("-fullscreen", False)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
         
 
         # Login Page Buttons
@@ -231,8 +231,8 @@ class signupWindow():
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = False
-        self.master.attributes("-fullscreen", False)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
         
         # Sign Up Page Buttons
         self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
@@ -265,8 +265,8 @@ class aboutWindow():
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = False
-        self.master.attributes("-fullscreen", False)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
         
         # About Window Buttons
         self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
