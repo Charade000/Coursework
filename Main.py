@@ -139,7 +139,7 @@ class Home():
     
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
-            print ("\nStaff Table Already Exists")
+            print ("\nStaff Table Already Exists\n")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -205,13 +205,20 @@ class loginWindow():
     
     # Connecting To Database To Check Login
     def checkLogin(self):
+        email="bob"
+        password="dood"
         
-        pass
-        # db =sqlite3.connect("Login.db")
-        # cursor = db.cursor()
-        # sql = "SELECT COUNT(*) FROM Pet"
-        # cursor.execute(sql)
-        # noOfPetRecords = cursor.fetchone()[0]
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """SELECT StaffEmail,StaffPassword from Login WHERE StaffEmail='{email}' AND StaffPassword = '{password}'"""
+        cursor.execute(sql)
+        
+        print(cursor.fetchone())
+        if cursor.fetchone() == None:
+            print("boo")
+        else:
+            print("woo")
+        
         
         
 
