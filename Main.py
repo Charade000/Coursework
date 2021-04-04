@@ -23,11 +23,16 @@ class Home():
         
 
         # 'Home' Page Buttons
-        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
-        self.Login_B=Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        self.SignUp_B=Button(self.master,text='Sign Up',command=self.sign_up,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
-        self.About_B=Button(self.master,text='About Us',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
-
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
+        Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
+        Button(self.master,text='Sign Up',command=self.sign_up,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
+        Button(self.master,text='About Us',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+    
+    # Quit Program
+    def end(self):
+        quit()
+    
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -87,23 +92,24 @@ class Home():
                     """
                 cursor.execute(sql)
                 db.commit()
+                print("Customer Table Created")
     
     def createLoginTable(self,dbName):
         if 'Login' in self.getTables(dbName):
-            print ("\nLogin Table Already Exists")
+            print ("Login Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
                 sql ="""CREATE TABLE Login(
-                    LoginID INTEGER PRIMARY KEY AUTOINCREMENT,
                     StaffEmail TEXT NOT NULL,
                     StaffPassword TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+                print("Login Table Created")
     
     def createBookingsTable(self,dbName):
         if 'Bookings' in self.getTables(dbName):
-            print ("\nBookings Table Already Exists")
+            print ("Bookings Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -119,10 +125,11 @@ class Home():
                     VehicleID INTEGER NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+                print("Bookings Table Created")
     
     def createVehicleTable(self,dbName):
         if 'Vehicle' in self.getTables(dbName):
-            print ("\nVehicle Table Already Exists")
+            print ("Vehicle Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -136,10 +143,11 @@ class Home():
                     StaffID  INTEGER NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+                print("Vehicle Table Created")
     
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
-            print ("\nStaff Table Already Exists\n")
+            print ("Staff Table Already Exists\n---------------------------------------------\n")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -157,6 +165,7 @@ class Home():
                     Postcode TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
+                print("Staff Table Created")
 
 
 class loginWindow():
@@ -171,20 +180,25 @@ class loginWindow():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-
-        # Login Page Buttons
-        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
-        self.Back_B=Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        self.LoginButton=Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
-        
         # Login Page Labels
-        self.emailLabel=Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=5)
-        self.passwordLabel=Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=5)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=5)
+        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=5)
         
         # Entry Page Entry
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15).grid(row=2,column=2,pady=5)
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15).grid(row=3,column=2,pady=5)
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15)
+        self.emailEntry.grid(row=2,column=2,pady=5)
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15)
+        self.passwordEntry.grid(row=3,column=2,pady=5)
 
+        # Login Page Buttons
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
+        Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+    
+    # Quit Program
+    def end(self):
+        quit()
 
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -205,21 +219,66 @@ class loginWindow():
     
     # Connecting To Database To Check Login
     def checkLogin(self):
-        email="bob"
-        password="dood"
+        
+        email=self.emailEntry.get()
+        password=self.passwordEntry.get()
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """SELECT StaffEmail,StaffPassword from Login WHERE StaffEmail='{email}' AND StaffPassword = '{password}'"""
-        cursor.execute(sql)
-        
-        print(cursor.fetchone())
-        if cursor.fetchone() == None:
-            print("boo")
+        sql = """SELECT * from Login WHERE StaffEmail= ? AND StaffPassword = ?"""
+        cursor.execute(sql,[(email),(password)])
+        result=cursor.fetchall()
+        if result:
+            print(email + " has logged in")
+            self.menu()
         else:
-            print("woo")
+            print("Login Failed")
+            Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=3,padx=5)
+
+    def menu(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=menuWindow(root2)
+    
+class menuWindow():
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Logged In")
+        self.master.configure(background='turquoise3')
         
+        # Binding F11 and ESCAPE keys to full screen
+        self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Escape>", self.end_fullscreen)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
         
+        # Sign Up Page Buttons
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=10)
+        Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+    
+    # Quit Program
+    def end(self):
+        quit()
+    
+    # Toggling full screen
+    def toggle_fullscreen(self, event=None):
+        self.state = not self.state 
+        self.master.attributes("-fullscreen", self.state)
+        return "break"
+    def end_fullscreen(self, event=None):
+        self.state = False
+        self.master.attributes("-fullscreen", False)
+        return "break"
+    
+    # Return To Login Screen
+    def back(self):
+        print("Logged Out")
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=loginWindow(root2)
         
 
 class signupWindow():
@@ -235,9 +294,14 @@ class signupWindow():
         self.master.attributes("-fullscreen", True)
         
         # Sign Up Page Buttons
-        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
-        self.Back_B=Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+    
+    # Quit Program
+    def end(self):
+        quit()
+    
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -259,7 +323,7 @@ class signupWindow():
 class aboutWindow():
     def __init__(self, master):
         self.master = master
-        self.master.title("About Us")
+        self.master.title("About")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -269,9 +333,18 @@ class aboutWindow():
         self.master.attributes("-fullscreen", True)
         
         # About Window Buttons
-        self.Full_B=Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3,padx=20)
-        self.Back_B=Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1,padx=20)
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+    
+        # Text Entry
+        Label(self.master,bg='turquoise3',bd=0,font='Bembo',text='uhbjhyvjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjgv',fg='black').grid(row=0,column=3,padx=20)
+        Label(self.master,bg='turquoise3',bd=0,font='Bembo',text='uhbjhyvjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjgv',fg='black').grid(row=1,column=3,pady=20,padx=20)
+    
+    # Quit Program
+    def end(self):
+        quit()
+    
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
