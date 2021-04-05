@@ -75,7 +75,7 @@ class Home():
     # Creating All The Databases Or Checking If They Exist
     def createCustomerTable(self,dbName):
         if 'Customer' in self.getTables(dbName):
-            print ("\nCustomer Table Already Exists")
+            print ("---------------------------------------------\nCustomer Table Already Exists")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -92,7 +92,15 @@ class Home():
                     """
                 cursor.execute(sql)
                 db.commit()
-                print("Customer Table Created")
+                print("---------------------------------------------\nCustomer Table Created")
+                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
+                    VALUES("Dummy","McDummy","dummy@example.com",0161,10,"Downing Street","London","SW1A 2AA")"""
+                cursor.execute(sql)
+                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
+                    VALUES("Jimmy","Newtron","scientist@example.com",65654,12,"The Ridings","Slough","SL0 9DU")"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Customer Created~~")
     
     def createLoginTable(self,dbName):
         if 'Login' in self.getTables(dbName):
@@ -106,6 +114,11 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("Login Table Created")
+                sql ="""INSERT into Login(StaffEmail,StaffPassword)
+                    VALUES("test@example.com","Bean")"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Login Created~~")
     
     def createBookingsTable(self,dbName):
         if 'Bookings' in self.getTables(dbName):
@@ -147,7 +160,7 @@ class Home():
     
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
-            print ("Staff Table Already Exists\n---------------------------------------------\n")
+            print ("Staff Table Already Exists\n---------------------------------------------")
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
