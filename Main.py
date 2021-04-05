@@ -72,7 +72,7 @@ class Home():
         names = [row[0] for row in cursor.fetchall()]
         return names
 
-    # Creating All The Databases Or Checking If They Exist
+    # Creating Customer Database Or Checking If It Exist
     def createCustomerTable(self,dbName):
         if 'Customer' in self.getTables(dbName):
             print ("---------------------------------------------\nCustomer Table Already Exists")
@@ -93,15 +93,21 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("---------------------------------------------\nCustomer Table Created")
+                # Adding Fake Data For Testing
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
                     VALUES("Dummy","McDummy","dummy@example.com",0161,10,"Downing Street","London","SW1A 2AA")"""
                 cursor.execute(sql)
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
-                    VALUES("Jimmy","Newtron","scientist@example.com",65654,12,"The Ridings","Slough","SL0 9DU")"""
+                    VALUES("Jimmy","Newtron","scientist@example.com",01282524084,436,"Briercliffe Road","Burnley","BB10 2HA")"""
                 cursor.execute(sql)
                 db.commit()
-                print("~~Test Customer Created~~")
+                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
+                    VALUES("Joe","King","ma@example.com",01282622067,14,"Southfield Terrace","Colne","BB8 7JA")"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Customers Created~~")
     
+    # Creating Login Database Or Checking If It Exist
     def createLoginTable(self,dbName):
         if 'Login' in self.getTables(dbName):
             print ("Login Table Already Exists")
@@ -114,12 +120,18 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("Login Table Created")
+                # Adding Fake Data For Testing
                 sql ="""INSERT into Login(StaffEmail,StaffPassword)
                     VALUES("test@example.com","Bean")"""
                 cursor.execute(sql)
                 db.commit()
-                print("~~Test Login Created~~")
+                sql ="""INSERT into Login(StaffEmail,StaffPassword)
+                    VALUES("staff@hypothetical.com","password")"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Logins Created~~")
     
+    # Creating Bookings Database Or Checking If It Exist
     def createBookingsTable(self,dbName):
         if 'Bookings' in self.getTables(dbName):
             print ("Bookings Table Already Exists")
@@ -139,7 +151,22 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("Bookings Table Created")
+                # Adding Fake Data For Testing
+                sql ="""INSERT into Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
+                    VALUES(1,"Downing Street, SW1A 2AA","Barnes Holme, BB3 3NZ",60,"True","09/07/2016","07:30",1)"""
+                cursor.execute(sql)
+                db.commit()
+                sql ="""INSERT into Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
+                    VALUES(2,"Briercliffe Road, BB10 2HA","Snape Street, BB3 1EN",25,"True","11/11/2017","11:45",2)"""
+                cursor.execute(sql)
+                db.commit()
+                sql ="""INSERT into Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
+                    VALUES(3,"Southfield Terrace, BB8 7JA","Pendle Drive, BB2 3DT",40,"True","23/12/2017","06:00",2)"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Bookings Created~~")
     
+    # Creating Vehicle Database Or Checking If It Exist
     def createVehicleTable(self,dbName):
         if 'Vehicle' in self.getTables(dbName):
             print ("Vehicle Table Already Exists")
@@ -157,7 +184,18 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("Vehicle Table Created")
+                # Adding Fake Data For Testing
+                sql ="""INSERT into Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
+                    VALUES("16/02/2020",3376,5,"TX4","Available",1)"""
+                cursor.execute(sql)
+                db.commit()
+                sql ="""INSERT into Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
+                    VALUES("04/08/2020",1943,6,"TXE","Available",2)"""
+                cursor.execute(sql)
+                db.commit()
+                print("~~Test Vehicles Created~~")
     
+    # Creating Staff Database Or Checking If It Exist
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
             print ("Staff Table Already Exists\n---------------------------------------------")
@@ -179,6 +217,15 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("Staff Table Created")
+                # Adding Fake Data For Testing
+                sql ="""INSERT into Staff(Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
+                    VALUES("John","Baxter","test@example.com","076537875789","Taxi And Minibus","Unavailable",8,"Pendle Street","Nelson","BB9 7NH")"""
+                cursor.execute(sql)
+                db.commit()
+                sql ="""INSERT into Staff(Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
+                    VALUES("Terry","Johnson","staff@hypothetical.com","079878556408","Taxi","Available",3,"Granby Street","Burnley","BB12 0PP")"""
+                cursor.execute(sql)
+                db.commit()
 
 
 class loginWindow():
@@ -248,6 +295,7 @@ class loginWindow():
             print("Login Failed")
             Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=3,padx=5)
 
+    # Redirecting After Login Page
     def menu(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
@@ -375,8 +423,6 @@ class aboutWindow():
         # root2.geometry("200x{1}+0+0".format(root2.winfo_screenheight()))
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=Home(root2)
-
-
 
 
 def main():
