@@ -235,14 +235,14 @@ class loginWindow():
         self.master.attributes("-fullscreen", True)
         
         # Login Page Labels
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0)
-        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=5)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0)
         
         # Entry Page Entry
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15)
-        self.emailEntry.grid(row=2,column=2,pady=5)
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=15)
-        self.passwordEntry.grid(row=3,column=2,pady=5)
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry.grid(row=2,column=2,pady=10,columnspan=2)
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry.grid(row=3,column=2,columnspan=2)
 
         # Login Page Buttons
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
@@ -276,7 +276,6 @@ class loginWindow():
     
     # Connecting To Database To Check Login
     def checkLogin(self):
-        
         email=self.emailEntry.get()
         password=self.passwordEntry.get()
         
@@ -290,7 +289,7 @@ class loginWindow():
             self.menu()
         else:
             print("Login Failed")
-            Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=3)
+            Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=4)
 
     # Redirecting After Login Page
     def menu(self):
@@ -313,11 +312,12 @@ class menuWindow():
         self.master.attributes("-fullscreen", True)
         
         # Menu Up Page Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
         Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
         Button(self.master,text='Add',command=self.add_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Show',command=self.show_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
-    
+
     # Quit Program
     def end(self):
         quit()
@@ -345,9 +345,16 @@ class menuWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=loginWindow(root2)
+        
+    def show_data(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
 
 
 class addWindow():
+
     def __init__(self, master):
         self.master = master
         self.master.title("Add")
@@ -364,11 +371,11 @@ class addWindow():
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         
-        Button(self.master,text='Add Customer',command=self.add_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Add Login',command=self.add_login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
-        Button(self.master,text='Add Booking',command=self.add_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=5)
-        Button(self.master,text='Add Vehicle',command=self.add_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=6)
-        Button(self.master,text='Add Staff',command=self.add_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=7)
+        Button(self.master,text='Add Customer',command=self.add_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
+        Button(self.master,text='Add Login',command=self.add_login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
+        Button(self.master,text='Add Booking',command=self.add_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        Button(self.master,text='Add Vehicle',command=self.add_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
+        Button(self.master,text='Add Staff',command=self.add_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
 
 
     # Quit Program
@@ -424,10 +431,10 @@ class addWindow():
         muGUI=new_staff(root2)
 
 
-class new_customer():
+class showWindow():
     def __init__(self, master):
         self.master = master
-        self.master.title("About")
+        self.master.title("Show")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -436,12 +443,88 @@ class new_customer():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # About Window Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # Menu Up Page Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+
+    # Quit Program
+    def end(self):
+        quit()
     
-    # Text Entry
+    # Toggling full screen
+    def toggle_fullscreen(self, event=None):
+        self.state = not self.state 
+        self.master.attributes("-fullscreen", self.state)
+        return "break"
+    def end_fullscreen(self, event=None):
+        self.state = False
+        self.master.attributes("-fullscreen", False)
+        return "break"
+        
+    # Return To Login Screen
+    def back(self):
+        print("Logged Out")
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=menuWindow(root2)
+
+
+################################################################
+class new_customer():
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Add New Customer")
+        self.master.configure(background='turquoise3')
+        
+        # Binding F11 and ESCAPE keys to full screen
+        self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Escape>", self.end_fullscreen)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
+        
+        # New_Customer Window Buttons
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
+    
+    # New Customer Label
+        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Mobile Number',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Street Number',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='Street Name',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+        Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
+        Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
+
+    # New Customer Entry
+        self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.surnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.surnameEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        
+        self.mobileEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.mobileEntry.grid(row=4,column=1,pady=10,columnspan=2)
+        
+        self.streetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.streetNumEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        
+        self.streetNameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.streetNameEntry.grid(row=6,column=1,pady=10,columnspan=2)
+        
+        self.townEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.townEntry.grid(row=7,column=1,pady=10,columnspan=2)
+        
+        self.postcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.postcodeEntry.grid(row=8,column=1,pady=10,columnspan=2)
+
     
     # Quit Program
     def end(self):
@@ -457,31 +540,66 @@ class new_customer():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Home' Screen
+    # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        forename=self.forenameEntry.get()
+        surname=self.surnameEntry.get()
+        email=self.emailEntry.get()
+        mobile=self.mobileEntry.get()
+        streetNum=self.streetNumEntry.get()
+        streetName=self.streetNameEntry.get()
+        town=self.townEntry.get()
+        postcode=self.postcodeEntry.get()
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
+            VALUES(?,?,?,?,?,?,?,?)"""
+        cursor.execute(sql,[(forename),(surname),(email),(mobile),(streetNum),(streetName),(town),(postcode)])
+        
+        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
+            db.commit()
+            print("\n---------------------------------------------\nNew Customer Commited")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Customer Commit Failed")
+            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
 class new_login():
     def __init__(self, master):
         self.master = master
-        self.master.title("About")
+        self.master.title("Add New Login")
         self.master.configure(background='turquoise3')
         
-        # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # About Window Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # New_Login Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
     
-    # Text Entry
+    # New Login Label
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+
+    # New Login Entry
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry.grid(row=2,column=1,pady=10,columnspan=2)
+
     
     # Quit Program
     def end(self):
@@ -497,17 +615,37 @@ class new_login():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Home' Screen
+    # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        email=self.emailEntry.get()
+        password=self.passwordEntry.get()
+
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Login(StaffEmail,StaffPassword)
+            VALUES(?,?)"""
+        cursor.execute(sql,[(email),(password)])
+        
+        if len(email) > 0 and len(password) > 0 :
+            db.commit()
+            print("\n---------------------------------------------\nNew Login Commited")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Login Commit Failed")
+            Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
 class new_booking():
     def __init__(self, master):
         self.master = master
-        self.master.title("About")
+        self.master.title("Add New Booking")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -516,12 +654,47 @@ class new_booking():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # About Window Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
     
-    # Text Entry
+    # New Customer Label
+        Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Start',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Destination',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Amount Paid',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Fufilled',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+        Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
+        Label(self.master,text='Vehicle',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
+
+    # New Customer Entry
+        self.CustomerIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.CustomerIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.StartEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.StartEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        
+        self.DestinationEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.DestinationEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        
+        self.AmountEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.AmountEntry.grid(row=4,column=1,pady=10,columnspan=2)
+        
+        self.fufilledEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.fufilledEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        
+        self.DateEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.DateEntry.grid(row=6,column=1,pady=10,columnspan=2)
+        
+        self.TimeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.TimeEntry.grid(row=7,column=1,pady=10,columnspan=2)
+        
+        self.VehicleEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.VehicleEntry.grid(row=8,column=1,pady=10,columnspan=2)
+
     
     # Quit Program
     def end(self):
@@ -537,17 +710,42 @@ class new_booking():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Home' Screen
+    # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        customer=self.CustomerIDEntry.get()
+        start=self.StartEntry.get()
+        destination=self.DestinationEntry.get()
+        amount=self.AmountEntry.get()
+        fufilled=self.fufilledEntry.get()
+        date=self.DateEntry.get()
+        time=self.TimeEntry.get()
+        vehicle=self.VehicleEntry.get()
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
+            VALUES(?,?,?,?,?,?,?,?)"""
+        cursor.execute(sql,[(customer),(start),(destination),(amount),(fufilled),(date),(time),(vehicle)])
+        
+        if len(customer) > 0 and len(start) > 0 and len(destination) > 0 and len(amount) > 0 and len(fufilled) > 0 and len(date) > 0 and len(time) > 0 and len(vehicle) > 0:
+            db.commit()
+            print("\n---------------------------------------------\nNew Booking Commited")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Booking Commit Failed")
+            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
 class new_vehicle():
     def __init__(self, master):
         self.master = master
-        self.master.title("About")
+        self.master.title("Add New Vehicle")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -556,12 +754,39 @@ class new_vehicle():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # About Window Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
     
-    # Text Entry
+    # New Customer Label
+        Label(self.master,text='MOT',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Mileage',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Seats',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Make',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+
+    # New Customer Entry
+        self.MOTEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.MOTEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.MileageEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.MileageEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        
+        self.SeatsEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.SeatsEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        
+        self.MakeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.MakeEntry.grid(row=4,column=1,pady=10,columnspan=2)
+        
+        self.AvailabilityEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.AvailabilityEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        
+        self.StaffIdEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.StaffIdEntry.grid(row=6,column=1,pady=10,columnspan=2)
+        
     
     # Quit Program
     def end(self):
@@ -577,17 +802,40 @@ class new_vehicle():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Home' Screen
+    # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        MOT=self.MOTEntry.get()
+        mileage=self.MileageEntry.get()
+        seats=self.SeatsEntry.get()
+        make=self.MakeEntry.get()
+        availability=self.AvailabilityEntry.get()
+        staff=self.StaffIdEntry.get()
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
+            VALUES(?,?,?,?,?,?)"""
+        cursor.execute(sql,[(MOT),(mileage),(seats),(make),(availability),(staff)])
+        
+        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and len(staff) > 0:
+            db.commit()
+            print("\n---------------------------------------------\nNew Vehicle Commited")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
+            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
 class new_staff():
     def __init__(self, master):
         self.master = master
-        self.master.title("About")
+        self.master.title("Add New Staff")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -596,12 +844,55 @@ class new_staff():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # About Window Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
     
-    # Text Entry
+    # New Customer Label
+        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Mobile Number',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Capabilities',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+        Label(self.master,text='Street Number',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
+        Label(self.master,text='Street Name',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
+        Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
+        Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10)
+
+    # New Customer Entry
+        self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.surnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.surnameEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        
+        self.EmailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.EmailEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        
+        self.mobileEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.mobileEntry.grid(row=4,column=1,pady=10,columnspan=2)
+        
+        self.CapabilitiesEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.CapabilitiesEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        
+        self.AvailabilityEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.AvailabilityEntry.grid(row=6,column=1,pady=10,columnspan=2)
+        
+        self.streetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.streetNumEntry.grid(row=7,column=1,pady=10,columnspan=2)
+        
+        self.streetNameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.streetNameEntry.grid(row=8,column=1,pady=10,columnspan=2)
+        
+        self.townEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.townEntry.grid(row=9,column=1,pady=10,columnspan=2)
+        
+        self.postcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.postcodeEntry.grid(row=10,column=1,pady=10,columnspan=2)
+
     
     # Quit Program
     def end(self):
@@ -617,12 +908,41 @@ class new_staff():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Home' Screen
+    # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        forename=self.forenameEntry.get()
+        surname=self.surnameEntry.get()
+        email=self.EmailEntry.get()
+        capability=self.CapabilitiesEntry.get()
+        availability=self.AvailabilityEntry.get()
+        mobile=self.mobileEntry.get()
+        streetNum=self.streetNumEntry.get()
+        streetName=self.streetNameEntry.get()
+        town=self.townEntry.get()
+        postcode=self.postcodeEntry.get()
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Staff(Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
+            VALUES(?,?,?,?,?,?,?,?,?,?)"""
+        cursor.execute(sql,[(forename),(surname),(email),(mobile),(capability),(availability),(streetNum),(streetName),(town),(postcode)])
+        
+        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
+            db.commit()
+            print("\n---------------------------------------------\nNew Staff Commited")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Staff Commit Failed")
+            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+
+################################################################
 
 
 class aboutWindow():
