@@ -1,5 +1,7 @@
 from tkinter import *
 import sqlite3
+from time import time, ctime
+
 
 class Home():
     def __init__(self, master):
@@ -13,6 +15,7 @@ class Home():
         self.createBookingsTable("main.db")
         self.createVehicleTable("main.db")
         self.createStaffTable("main.db")
+        self.createTimeTable("main.db")
 
         
         # Binding F11 and ESCAPE keys to full screen
@@ -25,8 +28,7 @@ class Home():
         # 'Home' Page Buttons
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
         Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        # Button(self.master,text='Add',command=self.add_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
-        Button(self.master,text='About Us',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
+        Button(self.master,text='About',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
     
     # Quit Program
@@ -69,7 +71,7 @@ class Home():
     # Creating Customer Database Or Checking If It Exist
     def createCustomerTable(self,dbName):
         if 'Customer' in self.getTables(dbName):
-            print ("---------------------------------------------\nCustomer Table Already Exists")
+            pass
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -104,7 +106,7 @@ class Home():
     # Creating Login Database Or Checking If It Exist
     def createLoginTable(self,dbName):
         if 'Login' in self.getTables(dbName):
-            print ("Login Table Already Exists")
+            pass
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -128,7 +130,7 @@ class Home():
     # Creating Bookings Database Or Checking If It Exist
     def createBookingsTable(self,dbName):
         if 'Bookings' in self.getTables(dbName):
-            print ("Bookings Table Already Exists")
+            pass
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -163,7 +165,7 @@ class Home():
     # Creating Vehicle Database Or Checking If It Exist
     def createVehicleTable(self,dbName):
         if 'Vehicle' in self.getTables(dbName):
-            print ("Vehicle Table Already Exists")
+            pass
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -192,7 +194,7 @@ class Home():
     # Creating Staff Database Or Checking If It Exist
     def createStaffTable(self,dbName):
         if 'Staff' in self.getTables(dbName):
-            print ("Staff Table Already Exists\n---------------------------------------------")
+            pass
         else:
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
@@ -220,6 +222,23 @@ class Home():
                     VALUES("Terry","Johnson","staff@hypothetical.com","079878556408","Taxi","Available",3,"Granby Street","Burnley","BB12 0PP")"""
                 cursor.execute(sql)
                 db.commit()
+                
+    # Creating Staff Database Or Checking If It Exist
+    def createTimeTable(self,dbName):
+        if 'Time' in self.getTables(dbName):
+            pass
+        else:
+            with sqlite3.connect(dbName) as db:
+                cursor=db.cursor()
+                sql ="""CREATE TABLE Time(
+                    TimeID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Email TEXT NOT NULL,
+                    LogIn TEXT NOT NULL,
+                    LogOut TEXT NOT NULL)
+                    """
+                cursor.execute(sql)
+                db.commit()
+                print("---------------------------------------------\Time Table Created")
 
 
 class loginWindow():
@@ -278,6 +297,8 @@ class loginWindow():
     def checkLogin(self):
         email=self.emailEntry.get()
         password=self.passwordEntry.get()
+        t = time()
+        ct = ctime(t)
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
@@ -285,7 +306,13 @@ class loginWindow():
         cursor.execute(sql,[(email),(password)])
         result=cursor.fetchall()
         if result:
-            print(email + " has logged in")
+            print("--------------------------------")
+            print(ct + "\n" + email + " has logged in")
+            print("--------------------------------")
+            sql = """INSERT INTO Time(Email,LogIn,LogOut)
+                VALUES(?,?,?)"""
+            cursor.execute(sql,[(email),(ct),('NULL')])
+            db.commit()
             self.menu()
         else:
             print("Login Failed")
@@ -340,7 +367,12 @@ class menuWindow():
         
     # Return To Login Screen
     def back(self):
-        print("Logged Out")
+        t = time()
+        ct = ctime(t)
+        print("--------------------------------")
+        print(ct + "\nLogged out")
+        print("--------------------------------")
+        
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
@@ -567,7 +599,7 @@ class new_customer():
         if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Customer Commited")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
@@ -637,7 +669,7 @@ class new_login():
         if len(email) > 0 and len(password) > 0 :
             db.commit()
             print("\n---------------------------------------------\nNew Login Commited")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Login Commit Failed")
             Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
@@ -737,7 +769,7 @@ class new_booking():
         if len(customer) > 0 and len(start) > 0 and len(destination) > 0 and len(amount) > 0 and len(fufilled) > 0 and len(date) > 0 and len(time) > 0 and len(vehicle) > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Booking Commited")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Booking Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
@@ -827,7 +859,7 @@ class new_vehicle():
         if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and len(staff) > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Vehicle Commited")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
@@ -937,7 +969,7 @@ class new_staff():
         if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Staff Commited")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Staff Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
