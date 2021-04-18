@@ -279,18 +279,8 @@ class aboutWindow():
     def back(self):
         self.master.withdraw()
         root2=Toplevel(self.master)
-        # root2.geometry("200x{1}+0+0".format(root2.winfo_screenheight()))
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=Home(root2)
-
-
-    def main():
-        root=Tk()
-        myGUIWelcome=Home(root)
-        root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-        root.mainloop(
-            
-        )
 
 class loginWindow():
     def __init__(self, master):
@@ -376,7 +366,6 @@ class loginWindow():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=menuWindow(root2)
 
-
 class menuWindow():
     def __init__(self, master):
         self.master = master
@@ -442,7 +431,6 @@ class menuWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=showWindow(root2)
-
 
 class addWindow():
 
@@ -521,7 +509,6 @@ class addWindow():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=new_staff(root2)
 
-
 class showWindow():
     def __init__(self, master):
         self.master = master
@@ -598,12 +585,12 @@ class showWindow():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=display_staff(root2)
 
-###############################################################################################
-###############################################################################################
-class dispaly_customer():
+################################################################################################
+################################################################################################
+class display_customer():
     def __init__(self, master):
         self.master = master
-        self.master.title("Add New Customer")
+        self.master.title("Show Customer")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -614,10 +601,12 @@ class dispaly_customer():
         
         # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-    
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
+
+
     # New Customer Label
         Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
@@ -627,6 +616,8 @@ class dispaly_customer():
         Label(self.master,text='Street Name',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
         Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
         Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
+        Label(self.master,text='Customer ID',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
+
 
     # New Customer Entry
         self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
@@ -652,11 +643,20 @@ class dispaly_customer():
         
         self.postcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.postcodeEntry.grid(row=8,column=1,pady=10,columnspan=2)
+        
+        self.idEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.idEntry.grid(row=9,column=1,pady=10,columnspan=2)
 
     
     # Quit Program
     def end(self):
         quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_customer(root2)
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -676,7 +676,18 @@ class dispaly_customer():
         muGUI=addWindow(root2)
         
     # Adding To Database
-    def addTo(self):
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=3,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=4,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=5,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=6,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=7,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=8,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=9,column=3,columnspan=2)
+        
         forename=self.forenameEntry.get()
         surname=self.surnameEntry.get()
         email=self.emailEntry.get()
@@ -685,53 +696,554 @@ class dispaly_customer():
         streetName=self.streetNameEntry.get()
         town=self.townEntry.get()
         postcode=self.postcodeEntry.get()
+        cusID=self.idEntry.get()
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Customer(Forename,Surname,Email,MobileNum,StreetNum,StreetName,Town,Postcode)
-            VALUES(?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(forename),(surname),(email),(mobile),(streetNum),(streetName),(town),(postcode)])
-        
-        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Customer Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Customer Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        if len(forename) > 0 or len(surname) > 0 or len(email) > 0 or len(mobile) > 0 or len(streetNum) > 0 or len(streetName) > 0 or len(postcode) > 0 or len(cusID) > 0:
+            
+            if len(forename) > 0:
+                temp=forename
+                sql = """SELECT Forename FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(surname) > 0:
+                temp=surname
+                sql = """SELECT Forename FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    la5=Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                    
+            elif len(email) > 0:
+                temp=email
+                sql = """SELECT Forename FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(mobile) > 0:
+                temp=mobile
+                sql = """SELECT Forename FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Customer WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            
+            elif len(streetNum) > 0:
+                temp=streetNum
+                sql = """SELECT Forename FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(streetName) > 0:
+                temp=streetName
+                sql = """SELECT Forename FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+
+            elif len(town) > 0:
+                temp=town
+                sql = """SELECT Forename FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(postcode) > 0:
+                temp=postcode
+                sql = """SELECT Forename FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE Postcode LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                    
+            elif len(cusID) > 0:
+                temp=cusID
+                sql = """SELECT Forename FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT CustomerID FROM Customer WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
 
 class display_login():
     def __init__(self, master):
         self.master = master
-        self.master.title("Add New Login")
+        self.master.title("Show Login")
         self.master.configure(background='turquoise3')
         
+        # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # New_Login Window Buttons
+        # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-    
-    # New Login Label
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
+
+
+    # New Customer Label
         Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
         Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-
-    # New Login Entry
+        
+    # New Customer Entry
         self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.emailEntry.grid(row=1,column=1,pady=10,columnspan=2)
         
         self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.passwordEntry.grid(row=2,column=1,pady=10,columnspan=2)
-
+        
+        
     
     # Quit Program
     def end(self):
         quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_login(root2)
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -751,29 +1263,51 @@ class display_login():
         muGUI=addWindow(root2)
         
     # Adding To Database
-    def addTo(self):
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        
         email=self.emailEntry.get()
         password=self.passwordEntry.get()
-
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Login(StaffEmail,StaffPassword)
-            VALUES(?,?)"""
-        cursor.execute(sql,[(email),(password)])
-        
-        if len(email) > 0 and len(password) > 0 :
-            db.commit()
-            print("\n---------------------------------------------\nNew Login Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Login Commit Failed")
-            Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        if len(email) > 0 or len(password) > 0 :
+            
+            if len(email) > 0:
+                temp=email
+                sql = """SELECT StaffEmail FROM Login WHERE StaffEmail LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT StaffPassword FROM Login WHERE StaffEmail LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                
+            elif len(password) > 0:
+                temp=password
+                sql = """SELECT StaffEmail FROM Login WHERE StaffPassword LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT StaffPassword FROM Login WHERE StaffPassword LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
 
 class display_booking():
     def __init__(self, master):
         self.master = master
-        self.master.title("Add New Booking")
+        self.master.title("Show Booking")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -784,62 +1318,62 @@ class display_booking():
         
         # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find',command=self.find,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
 
-    
+
     # New Customer Label
-        Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Start',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='Destination',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='Amount',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-        Label(self.master,text='Fufilled',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
-        Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
-        Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
-        Label(self.master,text='Vehicle',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
-        Label(self.master,text='Find CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=4,pady=10,padx=10)
-        Label(self.master,text='Forname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
-
+        Label(self.master,text='Bookings ID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Customer ID',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Start',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Destination',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Amount Paid',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='Fufilled',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+        Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
+        Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
+        Label(self.master,text='Vehicle ID',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
 
 
     # New Customer Entry
+        self.BookingsIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.BookingsIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
         self.CustomerIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.CustomerIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        self.CustomerIDEntry.grid(row=2,column=1,pady=10,columnspan=2)
         
         self.StartEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StartEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        self.StartEntry.grid(row=3,column=1,pady=10,columnspan=2)
         
         self.DestinationEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DestinationEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        self.DestinationEntry.grid(row=4,column=1,pady=10,columnspan=2)
         
         self.AmountEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.AmountEntry.grid(row=4,column=1,pady=10,columnspan=2)
-
-        self.fufilledEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.fufilledEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        self.AmountEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        
+        self.FufilledEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.FufilledEntry.grid(row=6,column=1,pady=10,columnspan=2)
         
         self.DateEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DateEntry.grid(row=6,column=1,pady=10,columnspan=2)
+        self.DateEntry.grid(row=7,column=1,pady=10,columnspan=2)
         
         self.TimeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.TimeEntry.grid(row=7,column=1,pady=10,columnspan=2)
+        self.TimeEntry.grid(row=8,column=1,pady=10,columnspan=2)
         
-        self.VehicleEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.VehicleEntry.grid(row=8,column=1,pady=10,columnspan=2)
-        
-        self.FornameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.FornameEntry.grid(row=2,column=4,pady=10,columnspan=2)
-        
-        self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-    
+        self.VehicleIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.VehicleIDEntry.grid(row=9,column=1,pady=10,columnspan=2)
+
     
     # Quit Program
     def end(self):
         quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_booking(root2)
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -859,49 +1393,536 @@ class display_booking():
         muGUI=addWindow(root2)
         
     # Adding To Database
-    def addTo(self):
-        customer=self.CustomerIDEntry.get()
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=3,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=4,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=5,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=6,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=7,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=8,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=9,column=3,columnspan=2)
+        
+        bookingID=self.BookingsIDEntry.get()
+        customerID=self.CustomerIDEntry.get()
         start=self.StartEntry.get()
         destination=self.DestinationEntry.get()
         amount=self.AmountEntry.get()
-        fufilled=self.fufilledEntry.get()
+        fufilled=self.FufilledEntry.get()
         date=self.DateEntry.get()
         time=self.TimeEntry.get()
-        vehicle=self.VehicleEntry.get()
-        
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
-            VALUES(?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(customer),(start),(destination),(amount),(fufilled),(date),(time),(vehicle)])
-        
-        if len(customer) > 0 and len(start) > 0 and len(destination) > 0 and len(amount) > 0 and len(fufilled) > 0 and len(date) > 0 and len(time) > 0 and len(vehicle) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Booking Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
-        else:
-            print("\n---------------------------------------------\n~~New Booking Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
-
-
-    def find(self):
-        forname=self.FornameEntry.get()
-        surname=self.SurnameEntry.get()
+        vehicleID=self.VehicleIDEntry.get()
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """SELECT CustomerID from Customer WHERE Forename = ? AND Surname = ?"""
-        cursor.execute(sql,[(forname),(surname)])
-        result=cursor.fetchall()
-        
-        if result:
-            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=4,pady=10,padx=10)
+        if len(bookingID) > 0 or len(customerID) > 0 or len(start) > 0 or len(destination) > 0 or len(amount) > 0 or len(fufilled) > 0 or len(time) > 0 or len(vehicleID) > 0:
+            
+            if len(bookingID) > 0:
+                temp=bookingID
+                sql = """SELECT BookingsID FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE BookingsID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(customerID) > 0:
+                temp=customerID
+                sql = """SELECT BookingsID FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE CustomerID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            
+            elif len(start) > 0:
+                temp=start
+                sql = """SELECT BookingsID FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE Start LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(destination) > 0:
+                temp=destination
+                sql = """SELECT BookingsID FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE Destination LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            
+            elif len(amount) > 0:
+                temp=amount
+                sql = """SELECT BookingsID FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE AmountPaid LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(fufilled) > 0:
+                temp=fufilled
+                sql = """SELECT BookingsID FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE Fufilled LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+
+            elif len(date) > 0:
+                temp=date
+                sql = """SELECT BookingsID FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE Date LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+            elif len(time) > 0:
+                temp=time
+                sql = """SELECT BookingsID FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE Time LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                    
+            elif len(vehicleID) > 0:
+                temp=vehicleID
+                sql = """SELECT BookingsID FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT CustomerID FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Start FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Destination FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT AmountPaid FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Fufilled FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT Date FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT Time FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                    
+                sql = """SELECT VehicleID FROM Bookings WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
 
 class display_vehicle():
     def __init__(self, master):
         self.master = master
-        self.master.title("Add New Vehicle")
+        self.master.title("Show Vehicle")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -912,52 +1933,52 @@ class display_vehicle():
         
         # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find',command=self.find,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
 
-    
+
     # New Customer Label
-        Label(self.master,text='MOT',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Mileage',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='Seats',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='Make',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
-        Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
-        Label(self.master,text='Find StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=4,pady=10,padx=10)
-        Label(self.master,text='Forname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
+        Label(self.master,text='Vehicle ID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='MOT',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='Mileage',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='Seats',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        Label(self.master,text='Make',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
+        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
+        Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
 
     # New Customer Entry
+        self.VehicleIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.VehicleIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
         self.MOTEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MOTEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        self.MOTEntry.grid(row=2,column=1,pady=10,columnspan=2)
         
         self.MileageEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MileageEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        self.MileageEntry.grid(row=3,column=1,pady=10,columnspan=2)
         
         self.SeatsEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SeatsEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        self.SeatsEntry.grid(row=4,column=1,pady=10,columnspan=2)
         
         self.MakeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MakeEntry.grid(row=4,column=1,pady=10,columnspan=2)
+        self.MakeEntry.grid(row=5,column=1,pady=10,columnspan=2)
         
         self.AvailabilityEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.AvailabilityEntry.grid(row=5,column=1,pady=10,columnspan=2)
+        self.AvailabilityEntry.grid(row=6,column=1,pady=10,columnspan=2)
         
-        self.StaffIdEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StaffIdEntry.grid(row=6,column=1,pady=10,columnspan=2)
-        
-        self.FornameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.FornameEntry.grid(row=2,column=4,pady=10,columnspan=2)
-        
-        self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-        
+        self.StaffIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.StaffIDEntry.grid(row=7,column=1,pady=10,columnspan=2)
     
     # Quit Program
     def end(self):
         quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_vehicle(root2)
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -977,45 +1998,337 @@ class display_vehicle():
         muGUI=addWindow(root2)
         
     # Adding To Database
-    def addTo(self):
-        MOT=self.MOTEntry.get()
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=3,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=4,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=5,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=6,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=7,column=3,columnspan=2)
+        
+        vehicleID=self.VehicleIDEntry.get()
+        mot=self.MOTEntry.get()
         mileage=self.MileageEntry.get()
         seats=self.SeatsEntry.get()
         make=self.MakeEntry.get()
         availability=self.AvailabilityEntry.get()
-        staff=self.StaffIdEntry.get()
+        staffID=self.StaffIDEntry.get()
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
-            VALUES(?,?,?,?,?,?)"""
-        cursor.execute(sql,[(MOT),(mileage),(seats),(make),(availability),(staff)])
-        
-        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and len(staff) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Vehicle Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        if len(vehicleID) > 0 or len(mot) > 0 or len(mileage) > 0 or len(seats) > 0 or len(make) > 0 or len(availability) > 0 or len(staffID) > 0:
+            
+            if len(vehicleID) > 0:
+                temp=vehicleID
+                sql = """SELECT VehicleID FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE VehicleID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+            elif len(mot) > 0:
+                temp=mot
+                sql = """SELECT VehicleID FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE MOT LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+            
+            elif len(mileage) > 0:
+                temp=mileage
+                sql = """SELECT VehicleID FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE Mileage LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+            elif len(seats) > 0:
+                temp=seats
+                sql = """SELECT VehicleID FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE Seats LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+            
+            elif len(make) > 0:
+                temp=make
+                sql = """SELECT VehicleID FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE Make LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+            elif len(availability) > 0:
+                temp=availability
+                sql = """SELECT VehicleID FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
 
-    def find(self):
-            forname=self.FornameEntry.get()
-            surname=self.SurnameEntry.get()
-            
-            db =sqlite3.connect("main.db")
-            cursor = db.cursor()
-            sql = """SELECT StaffID from Staff WHERE Forename = ? AND Surname = ?"""
-            cursor.execute(sql,[(forname),(surname)])
-            result=cursor.fetchall()
-            
-            if result:
-                Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=4,pady=10,padx=10)
+            elif len(staffID) > 0:
+                temp=staffID
+                sql = """SELECT VehicleID FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT MOT FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Mileage FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT Seats FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+                sql = """SELECT Make FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StaffID FROM Vehicle WHERE StaffID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
 
 class display_staff():
     def __init__(self, master):
         self.master = master
-        self.master.title("Add New Staff")
+        self.master.title("Show Staff")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
@@ -1650,6 +2963,10 @@ class new_staff():
 ###############################################################################################
 ###############################################################################################
 
-
+def main():
+    root=Tk()
+    myGUIWelcome=Home(root)
+    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+    root.mainloop()
 if __name__ == '__main__':
     main()
