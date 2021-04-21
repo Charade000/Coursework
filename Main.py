@@ -1,7 +1,6 @@
 from tkinter import *
 import sqlite3
-from time import time, ctime
-
+from time import time,ctime,sleep
 
 class Home():
     def __init__(self, master):
@@ -30,7 +29,15 @@ class Home():
         Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
         Button(self.master,text='About',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+        # Button(self.master,text='time',command=self.digitalclock,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
+
+    # def digitalclock(self):
+    #     self.master.withdraw()
+    #     root2=Toplevel(self.master)
+    #     root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+    #     muGUI=clock(root2)
     
+        
     # Quit Program
     def end(self):
         quit()
@@ -240,6 +247,19 @@ class Home():
                 db.commit()
                 print("---------------------------------------------\Time Table Created")
 
+# class clock():
+#     def __init__(self, master):
+#         self.master = master
+#         self.master.title("About")
+#         self.master.configure(background='turquoise3')
+#         def digitalclock():
+#             sleep(1)
+#             t=time()
+#             ct=ctime(t)
+#             Label(self.master,text=ct,bg='turquoise3',font='Bembo',fg='black').grid(row =1, column=1)
+#             digitalclock()
+#         digitalclock()
+
 class aboutWindow():
     def __init__(self, master):
         self.master = master
@@ -310,7 +330,7 @@ class loginWindow():
         Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
 
-        Button(self.master,text='temp bypass',command=self.menu,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
+        Button(self.master,text='temp bypass',command=self.menu2,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
 
     
     # Quit Program
@@ -365,6 +385,25 @@ class loginWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=menuWindow(root2)
+    def menu2(self):
+        email=self.emailEntry.get()
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + email + " has logged in")
+        print("--------------------------------")
+        sql = """INSERT INTO Time(Email,LogIn,LogOut)
+            VALUES(?,?,?)"""
+        cursor.execute(sql,[(email),(ct),('NULL')])
+        db.commit()
+        
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=menuWindow(root2)
 
 class menuWindow():
     def __init__(self, master):
@@ -387,6 +426,20 @@ class menuWindow():
 
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -459,6 +512,20 @@ class addWindow():
 
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -531,10 +598,25 @@ class showWindow():
         Button(self.master,text='Show Booking',command=self.show_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Show Vehicle',command=self.show_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
         Button(self.master,text='Show Staff',command=self.show_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
+        Button(self.master,text='Show Logs',command=self.show_logs,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
 
 
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -584,6 +666,12 @@ class showWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=display_staff(root2)
+        
+    def show_logs(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_logs(root2)
 
 ################################################################################################
 ################################################################################################
@@ -650,6 +738,20 @@ class display_customer():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
         
     def clear(self):
@@ -673,7 +775,7 @@ class display_customer():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+        muGUI=showWindow(root2)
         
     # Adding To Database
     def findData(self):
@@ -1237,6 +1339,20 @@ class display_login():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
         
     def clear(self):
@@ -1260,7 +1376,7 @@ class display_login():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+        muGUI=showWindow(root2)
         
     # Adding To Database
     def findData(self):
@@ -1367,6 +1483,20 @@ class display_booking():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
         
     def clear(self):
@@ -1390,7 +1520,7 @@ class display_booking():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+        muGUI=showWindow(root2)
         
     # Adding To Database
     def findData(self):
@@ -1972,6 +2102,20 @@ class display_vehicle():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
         
     def clear(self):
@@ -1995,7 +2139,7 @@ class display_vehicle():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+        muGUI=showWindow(root2)
         
     # Adding To Database
     def findData(self):
@@ -2339,10 +2483,11 @@ class display_staff():
         
         # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-    
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
+
     # New Customer Label
         Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
@@ -2354,7 +2499,8 @@ class display_staff():
         Label(self.master,text='Street Name',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
         Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
         Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10)
-
+        Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10)
+    
     # New Customer Entry
         self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
@@ -2385,11 +2531,35 @@ class display_staff():
         
         self.postcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.postcodeEntry.grid(row=10,column=1,pady=10,columnspan=2)
+        
+        self.staffIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.staffIDEntry.grid(row=11,column=1,pady=10,columnspan=2)
 
+    
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_staff(root2)
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -2406,10 +2576,23 @@ class display_staff():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+        muGUI=showWindow(root2)
         
     # Adding To Database
-    def addTo(self):
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=3,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=4,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=5,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=6,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=7,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=8,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=9,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=10,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=11,column=3,columnspan=2)
+
         forename=self.forenameEntry.get()
         surname=self.surnameEntry.get()
         email=self.EmailEntry.get()
@@ -2420,20 +2603,825 @@ class display_staff():
         streetName=self.streetNameEntry.get()
         town=self.townEntry.get()
         postcode=self.postcodeEntry.get()
+        staffID=self.staffIDEntry.get()
+        
+        if len(forename) > 0 or len(surname) > 0 or len(email) > 0 or len(capability) > 0 or len(availability) > 0 or len(mobile) > 0 or len(streetNum) > 0 or len(streetName) > 0 or len(town) > 0 or len(postcode) > 0 or len(staffID) > 0:
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            if len(forename) > 0:
+                temp=forename
+                sql = """SELECT Forename FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Forename LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(surname) > 0:
+                temp=surname
+                sql = """SELECT Forename FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Surname LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+            
+            elif len(email) > 0:
+                temp=email
+                sql = """SELECT Forename FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(capability) > 0:
+                temp=capability
+                sql = """SELECT Forename FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Capabilities LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(availability) > 0:
+                temp=availability
+                sql = """SELECT Forename FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Availability LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(mobile) > 0:
+                temp=mobile
+                sql = """SELECT Forename FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE MobileNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(streetNum) > 0:
+                temp=streetNum
+                sql = """SELECT Forename FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE StreetNum LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(streetName) > 0:
+                temp=streetName
+                sql = """SELECT Forename FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE StreetName LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+            elif len(town) > 0:
+                temp=town
+                sql = """SELECT Forename FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Surname FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT MobileNum FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                    
+                sql = """SELECT Capabilities FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=5,column=3,columnspan=2)
+                
+                sql = """SELECT Availability FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=6,column=3,columnspan=2)
+                
+                sql = """SELECT StreetNum FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=7,column=3,columnspan=2)
+                
+                sql = """SELECT StreetName FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=8,column=3,columnspan=2)
+                
+                sql = """SELECT Town FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=3,columnspan=2)
+                
+                sql = """SELECT Postcode FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=10,column=3,columnspan=2)
+                
+                sql = """SELECT StaffId FROM Staff WHERE Town LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
+
+#todo
+class display_logs():
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Show Logs")
+        self.master.configure(background='turquoise3')
+        
+        # Binding F11 and ESCAPE keys to full screen
+        self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Escape>", self.end_fullscreen)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
+        
+        # New_Customer Window Buttons
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Find',command=self.findData,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
+        Button(self.master,text='Clear',command=self.clear,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
+
+
+    # New Customer Label
+        Label(self.master,text='TimeID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+        Label(self.master,text='LogIn',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
+        Label(self.master,text='LogOut',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
+        
+    # New Customer Entry
+        self.timeIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.timeIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry.grid(row=2,column=1,pady=10,columnspan=2)
+        
+        self.loginEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.loginEntry.grid(row=3,column=1,pady=10,columnspan=2)
+        
+        self.logoutEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.logoutEntry.grid(row=4,column=1,pady=10,columnspan=2)
+    
+    # Quit Program
+    def end(self):
+        t = time()
+        ct = ctime(t)
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Staff(Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
-            VALUES(?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(forename),(surname),(email),(mobile),(capability),(availability),(streetNum),(streetName),(town),(postcode)])
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
         
-        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Staff Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Staff Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        quit()
+        
+    def clear(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=display_logs(root2)
+    
+    # Toggling full screen
+    def toggle_fullscreen(self, event=None):
+        self.state = not self.state 
+        self.master.attributes("-fullscreen", self.state)
+        return "break"
+    def end_fullscreen(self, event=None):
+        self.state = False
+        self.master.attributes("-fullscreen", False)
+        return "break"    
+    
+    # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
+        
+    # Adding To Database
+    def findData(self):
+        
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=1,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=2,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=3,column=3,columnspan=2)
+        Label(self.master,text="                                                                          ",bg='turquoise3',fg='turquoise3').grid(row=4,column=3,columnspan=2)
+        
+        timeID=self.timeIDEntry.get()
+        email=self.emailEntry.get()
+        login=self.loginEntry.get()
+        logout=self.logoutEntry.get()
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        if len(timeID) > 0 or len(email) > 0 or len(login) > 0 or len(logout) > 0:
+            
+            if len(timeID) > 0:
+                temp=timeID
+                sql = """SELECT TimeID FROM Time WHERE TimeID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Time WHERE TimeID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT LogIn FROM Time WHERE TimeID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT LogOut FROM Time WHERE TimeID LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+            elif len(email) > 0:
+                temp=email
+                sql = """SELECT TimeID FROM Time WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Time WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT LogIn FROM Time WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT LogOut FROM Time WHERE Email LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+            elif len(login) > 0:
+                temp=login
+                sql = """SELECT TimeID FROM Time WHERE LogIn LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Time WHERE LogIn LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT LogIn FROM Time WHERE LogIn LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT LogOut FROM Time WHERE LogIn LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
+                
+            elif len(logout) > 0:
+                temp=logout
+                sql = """SELECT TimeID FROM Time WHERE LogOut LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3,columnspan=2)
+                
+                sql = """SELECT Email FROM Time WHERE Logout LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=2,column=3,columnspan=2)
+                
+                sql = """SELECT LogIn FROM Time WHERE LogOut LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
+                
+                sql = """SELECT LogOut FROM Time WHERE LogOut LIKE ?"""
+                cursor.execute(sql,["%"+(temp)+"%"])
+                result=cursor.fetchone()
+                if result:
+                    Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=4,column=3,columnspan=2)
 
 ################################################################################################
 ################################################################################################
@@ -2493,6 +3481,20 @@ class new_customer():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -2569,6 +3571,20 @@ class new_login():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -2677,6 +3693,20 @@ class new_booking():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -2795,6 +3825,20 @@ class new_vehicle():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen
@@ -2914,6 +3958,20 @@ class new_staff():
     
     # Quit Program
     def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
         quit()
     
     # Toggling full screen

@@ -1,0 +1,9 @@
+1.Automate cost. map api, use postcode
+2.Regular expressions to check correct format eg. postcode
+3.Email api   ,   whatsapp confirmation
+4.Treeweiw for database
+5.Hash passwords and salts
+6.Data structure stacks, queues
+7.recursive      ,clock
+
+https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP-2015.PDF
