@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.ttk import *
 import sqlite3
 from time import time,ctime,sleep
 
@@ -705,8 +706,30 @@ class display_customer():
         Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
         Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
         Label(self.master,text='Customer ID',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
+        
+    # Creating TreeView
+        table=ttk.Treeview(self)
+        table['columns']=("CustomerID","Forename","Surname","Email","MobileNum","StreetNum","StreetName","Town","Postcode")
+        table.column("#0",width=0,minwidth=0)
+        table.column("CustomerID",width=120,minwidth=25,anchor=CENTER)
+        table.column("Forename",width=120,minwidth=25,anchor=W)
+        table.column("Surname",width=120,minwidth=25,anchor=W)
+        table.column("Email",width=120,minwidth=25,anchor=W)
+        table.column("MobileNum",width=120,minwidth=25,anchor=W)
+        table.column("StreetName",width=120,minwidth=25,anchor=W)
+        table.column("Town",width=120,minwidth=25,anchor=W)
+        table.column("Postcode",width=120,minwidth=25,anchor=W)
 
-
+        table.heading("#0",text="Label",anchor=W)
+        table.heading("CustomerID",text="CustomerID",anchor=CENTER)
+        table.heading("Forename",text="Forename",anchor=W)
+        table.heading("Surname",text="Surname",anchor=W)
+        table.heading("Email",text="Email",anchor=W)
+        table.heading("MobileNum",text="MobileNum",anchor=W)
+        table.heading("StreetName",text="StreetName",anchor=W)
+        table.heading("Town",text="Town",anchor=W)
+        table.heading("Postcode",text="Postcode",anchor=W)
+        
     # New Customer Entry
         self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
@@ -3221,7 +3244,6 @@ class display_staff():
                 if result:
                     Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=11,column=3,columnspan=2)
 
-#todo
 class display_logs():
     def __init__(self, master):
         self.master = master
