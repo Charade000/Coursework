@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter.ttk import *
+from tkinter import ttk
 import sqlite3
 from time import time,ctime,sleep
 
@@ -30,15 +30,8 @@ class Home():
         Button(self.master,text='Login',command=self.login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
         Button(self.master,text='About',command=self.about,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
-        # Button(self.master,text='time',command=self.digitalclock,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
 
-    # def digitalclock(self):
-    #     self.master.withdraw()
-    #     root2=Toplevel(self.master)
-    #     root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-    #     muGUI=clock(root2)
-    
-        
+
     # Quit Program
     def end(self):
         quit()
@@ -146,7 +139,7 @@ class Home():
                     BookingsID INTEGER PRIMARY KEY AUTOINCREMENT,
                     CustomerID INTEGER NOT NULL,
                     Start TEXT NOT NULL,
-                    Destinantion TEXT NOT NULL,
+                    Destination TEXT NOT NULL,
                     AmountPaid INTEGER NOT NULL,
                     Fufilled TEXT NOT NULL,
                     Date TEXT NOT NULL,
@@ -247,19 +240,6 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("---------------------------------------------\Time Table Created")
-
-# class clock():
-#     def __init__(self, master):
-#         self.master = master
-#         self.master.title("About")
-#         self.master.configure(background='turquoise3')
-#         def digitalclock():
-#             sleep(1)
-#             t=time()
-#             ct=ctime(t)
-#             Label(self.master,text=ct,bg='turquoise3',font='Bembo',fg='black').grid(row =1, column=1)
-#             digitalclock()
-#         digitalclock()
 
 class aboutWindow():
     def __init__(self, master):
@@ -1592,7 +1572,7 @@ class display_booking():
                 if result:
                     Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='green').grid(row=3,column=3,columnspan=2)
                 
-                sql = """SELECT Destination FROM Bookings WHERE BookingsID LIKE ?"""
+                sql = """SELECT Destinantion FROM Bookings WHERE BookingsID LIKE ?"""   #######spelt wrong on purpose
                 cursor.execute(sql,["%"+(temp)+"%"])
                 result=cursor.fetchone()
                 if result:

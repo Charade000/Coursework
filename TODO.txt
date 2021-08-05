@@ -1,9 +1,30 @@
-1.Automate cost. map api, use postcode
-2.Regular expressions to check correct format eg. postcode
+1.Automate cost. map api, use postcode        6
+2.Regular expressions to check correct format eg. postcode    5
 3.Email api   ,   whatsapp confirmation
-4.Treeweiw for database
-5.Hash passwords and salts
-6.Data structure stacks, queues
-7.recursive      ,clock
+4.Treeweiw for da tabase                 4
+5.Hash passwords and salts                 1
+6.Data structure stacks, queues           3
+7.recursive      ,clock            4
 
 https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP-2015.PDF
+
+
+
+boking manageent that sends bookings to drivers who can individually accepted
+crm        
+middleman for drivers. When 'available' drivers can choose to logins
+
+create the document with qa
+ 
+1) recreate the layout
+2) data structures
+3)automate cost
+4)regular expressions to check
+5) hash passwords 
+6) recursive clock 
+7) tree view 
+8) use postcode/ 
+map api
+email api
+whatss app Confirmation
+
