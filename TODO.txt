@@ -14,6 +14,8 @@ boking manageent that sends bookings to drivers who can individually accepted
 crm        
 middleman for drivers. When 'available' drivers can choose to logins
 
+on new booking there should be a drop down bar which shows customers to select
+
 create the document with qa
  
 1) recreate the layout

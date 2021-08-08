@@ -88,15 +88,15 @@ class Home():
                 db.commit()
                 print("---------------------------------------------\nCustomer Table Created")
                 # Adding Fake Data For Testing
-                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum,)
-                    VALUES("Dummy","McDummy","dummy@example.com",0161,10,"Downing Street","London","SW1A 2AA")"""
+                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
+                    VALUES("Dummy","McDummy","dummy@example.com",0161,10)"""
                 cursor.execute(sql)
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
-                    VALUES("Jimmy","Newtron","scientist@example.com",01282524084,436,"Briercliffe Road","Burnley","BB10 2HA")"""
+                    VALUES("Jimmy","Newtron","scientist@example.com",01282524084)"""
                 cursor.execute(sql)
                 db.commit()
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
-                    VALUES("Joe","King","ma@example.com",01282622067,14,"Southfield Terrace","Colne","BB8 7JA")"""
+                    VALUES("Joe","King","ma@example.com",01282622067)"""
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Customers Created~~")
@@ -164,7 +164,7 @@ class Home():
                     StartPostcode TEXT NOT NULL,
                     DestinationStreetNum INTEGER NOT NULL,
                     DestinationStreet TEXT NOT NULL,
-                    DestinationPostcode TEXT NOT NULL,,
+                    DestinationPostcode TEXT NOT NULL,
                     Fufilled TEXT NOT NULL,
                     Date TEXT NOT NULL,
                     Time TEXT NOT NULL,
@@ -174,7 +174,7 @@ class Home():
                 print("Bookings Table Created")
                 # Adding Fake Data For Testing
                 sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename)
-                    VALUES(1,10,"Downing Street","SW1A 2AA,6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy")"""
+                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy")"""
                 cursor.execute(sql)
                 
                 db.commit()
@@ -821,9 +821,9 @@ class new_booking():
         
         # New_Customer Window Buttons
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find',command=self.find,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
 
     
     # New Customer Label
@@ -913,27 +913,27 @@ class new_booking():
         
     # Adding To Database
     def addTo(self):
-        Forename=self.CustomerIDEntry.get()
-        CustomerID=self.StartEntry.get()
-        StartStreetNum=self.DestinationEntry.get()
-        StartStreet=self.AmountEntry.get()
-        StartPostcode=self.fufilledEntry.get()
-        DestinationStreetNum =self.DateEntry.get()
-        DestinationStreet=self.TimeEntry.get()
-        DestinationPostcode=self.VehicleEntry.get()
-        Fufilled=self.VehicleEntry.get()
-        Date=self.VehicleEntry.get()
-        Time=self.VehicleEntry.get()
+        Forename=self.ForenameEntry.get()
+        CustomerID=self.CustomerIDEntry.get()
+        StartStreetNum=self.StartStreetNumEntry.get()
+        StartStreet=self.StartStreetEntry.get()
+        StartPostcode=self.StartPostcodeEntry.get()
+        DestinationStreetNum =self.DestinationStreetNumEntry.get()
+        DestinationStreet=self.DestinationStreetEntry.get()
+        DestinationPostcode=self.DestinationPostcodeEntry.get()
+        Fufilled=self.FufilledEntry.get()
+        Date=self.DateEntry.get()
+        Time=self.TimeEntry.get()
 ###
 
 
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Bookings(CustomerID,Start,Destinantion,AmountPaid,Fufilled,Date,Time,VehicleID)
-            VALUES(?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(customer),(start),(destination),(amount),(fufilled),(date),(time),(vehicle)])
+        sql = """INSERT INTO Bookings(Forename,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?)"""
+        cursor.execute(sql,[(Forename),(CustomerID),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
         
-        if len(customer) > 0 and len(start) > 0 and len(destination) > 0 and len(amount) > 0 and len(fufilled) > 0 and len(date) > 0 and len(time) > 0 and len(vehicle) > 0:
+        if len(Forename) >= 0 and len(CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
             db.commit()
             print("\n---------------------------------------------\nNew Booking Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
@@ -941,19 +941,6 @@ class new_booking():
             print("\n---------------------------------------------\n~~New Booking Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
 
-
-    def find(self):
-        forname=self.FornameEntry.get()
-        surname=self.SurnameEntry.get()
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """SELECT CustomerID from Customer WHERE Forename = ? AND Surname = ?"""
-        cursor.execute(sql,[(forname),(surname)])
-        result=cursor.fetchall()
-        
-        if result:
-            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=4,pady=10,padx=10)
 
 class new_vehicle():
     def __init__(self, master):
