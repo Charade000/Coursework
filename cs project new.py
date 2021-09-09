@@ -89,7 +89,7 @@ class Home():
                 print("---------------------------------------------\nCustomer Table Created")
                 # Adding Fake Data For Testing
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
-                    VALUES("Dummy","McDummy","dummy@example.com",0161,10)"""
+                    VALUES("Dummy","McDummy","dummy@example.com",0161)"""
                 cursor.execute(sql)
                 sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
                     VALUES("Jimmy","Newtron","scientist@example.com",01282524084)"""
@@ -929,9 +929,24 @@ class new_booking():
 
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
+        
+        if len(Forename) <= 0 :
+            sql = """SELECT FORENAME FROM CUSTOMER WHERE CustomerID LIKE ?"""
+            cursor.execute(sql,[(CustomerID)])
+            result=cursor.fetchall()
+            if result:
+                Label(self.master,text='Forename Found',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
+        elif len(CustomerID) <= 0:
+            sql = """SELECT CustomerID FROM CUSTOMER WHERE CustomerID LIKE ?"""
+            cursor.execute(sql,[(CustomerID)])
+            result=cursor.fetchall()
+            if result:
+                Label(self.master,text='Forename Found',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
+#TODO##################################
+        
         sql = """INSERT INTO Bookings(Forename,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
             VALUES(?,?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(Forename),(CustomerID),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
+        cursor.execute(sql,[(Forename),(result),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
         
         if len(Forename) >= 0 and len(CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
             db.commit()
