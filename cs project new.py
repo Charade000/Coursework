@@ -12,7 +12,6 @@ class Home():
         # Creating Database
         self.createCustomerTable("main.db")
         self.createMasterLoginTable("main.db")
-        self.createDriverLoginTable("main.db")
         self.createBookingsTable("main.db")
         self.createVehicleTable("main.db")
         self.createStaffTable("main.db")
@@ -128,30 +127,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Master Logins Created~~")
-                
-        # Creating Driver Login Database Or Checking If It Exist
-    def createDriverLoginTable(self,dbName):
-        if 'DriverLogin' in self.getTables(dbName):
-            pass
-        else:
-            with sqlite3.connect(dbName) as db:
-                cursor=db.cursor()
-                sql ="""CREATE TABLE DriverLogin(
-                    DriverEmail TEXT NOT NULL,
-                    DriverPassword TEXT NOT NULL)"""
-                cursor.execute(sql)
-                db.commit()
-                print("Driver Login Table Created")
-                # Adding Fake Data For Testing
-                sql ="""INSERT into DriverLogin(DriverEmail,DriverPassword)
-                    VALUES("driver@example.com","wheel")"""
-                cursor.execute(sql)
-                db.commit()
-                sql ="""INSERT into DriverLogin(DriverEmail,DriverPassword)
-                    VALUES("road@hypothetical.com","car")"""
-                cursor.execute(sql)
-                db.commit()
-                print("~~Test Driver Logins Created~~")
+
     
     # Creating Bookings Database Or Checking If It Exist
     def createBookingsTable(self,dbName):
@@ -245,7 +221,7 @@ class Home():
                     VALUES("Terry","Johnson","staff@hypothetical.com","079878556408","Taxi","Available",3,"Granby Street","Burnley","BB12 0PP")"""
                 cursor.execute(sql)
                 db.commit()
-                
+
     # Creating Staff Database Or Checking If It Exist
     def createTimeTable(self,dbName):
         if 'Time' in self.getTables(dbName):
@@ -822,7 +798,7 @@ class new_booking():
         sql = """UPDATE Time
             SET LogOut = ?
             WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
+        cursor.execute(sql,[ct])
         db.commit()
         
         quit()
@@ -867,8 +843,8 @@ class new_booking():
 
             #################
             # Turn To DropBox
-            print(result)
-            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=6,padx=10)
+        print(result)
+        Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=6,padx=10)
             ###############################
             
         customer=result
@@ -888,9 +864,9 @@ class new_booking():
         
         # Cant get access to ADVCustomerID as ot is in another class
         #CustomerID=self.ADV_CustomerID.get()
-        if len(CustomerID) == 0:
+        if CustomerID == 0:
             CustomerID=self.CustomerIDEntry.get()
-        elif len(CustomerID) == 0:
+        elif CustomerID == 0:
             CustomerID=self.customer.get()
 
         db =sqlite3.connect("main.db")
@@ -899,7 +875,7 @@ class new_booking():
             VALUES(?,?,?,?,?,?,?,?,?,?)"""
         cursor.execute(sql,[(CustomerID),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
         
-        if len(CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
+        if (CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
             db.commit()
             print("\n---------------------------------------------\nNew Booking Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
