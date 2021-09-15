@@ -703,6 +703,7 @@ class new_customer():
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
+
         sql = """INSERT INTO Customer(Forename,Surname,Email,MobileNum)
             VALUES(?,?,?,?)"""
         cursor.execute(sql,[(forename),(surname),(email),(mobile)])
@@ -711,106 +712,20 @@ class new_customer():
             db.commit()
             print("\n---------------------------------------------\nNew Customer Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-            
+        
+            sql = """SELECT CustomerID FROM Customer WHERE Forename = ?"""
+            cursor.execute(sql,[(forename)])
+            ADV_CustomerID=cursor.fetchall()
+        # Cant get access to ADVCustomerID as ot is in another class
+
             self.master.withdraw()
             root2=Toplevel(self.master)
             root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-            muGUI=CusBooking(root2)
-        
+            muGUI=new_booking(root2)
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-class CusBooking():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Login")
-        self.master.configure(background='turquoise3')
         
-class new_login():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Login")
-        self.master.configure(background='turquoise3')
-        
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Login Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-
-    
-    # New Login Label
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-
-    # New Login Entry
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.emailEntry.grid(row=1,column=1,pady=10,columnspan=2)
-        
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.passwordEntry.grid(row=2,column=1,pady=10,columnspan=2)
-
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-        
-    # Adding To Database
-    def addTo(self):
-        email=self.emailEntry.get()
-        password=self.passwordEntry.get()
-
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Login(StaffEmail,StaffPassword)
-            VALUES(?,?)"""
-        cursor.execute(sql,[(email),(password)])
-        
-        if len(email) > 0 and len(password) > 0 :
-            db.commit()
-            print("\n---------------------------------------------\nNew Login Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Login Commit Failed")
-            Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-
 class new_booking():
     def __init__(self, master):
         self.master = master
@@ -844,6 +759,13 @@ class new_booking():
         Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10)
         Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
+        
+        # Cant get ADV_CustomerID Is in another class
+        ADV_CustomerID=0
+        CustomerIDS=self.ADV_CustomerID.get()
+        if CustomerIDS > 0:
+            Label(self.master,text='CustomerID =',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
+            Label(self.master,text=CustomerIDS,bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
 
 
 
@@ -952,6 +874,7 @@ class new_booking():
 
     # Adding To Database
     def addTo(self):
+        CustomerID =  0
         StartStreetNum=self.StartStreetNumEntry.get()
         StartStreet=self.StartStreetEntry.get()
         StartPostcode=self.StartPostcodeEntry.get()
@@ -961,8 +884,12 @@ class new_booking():
         Fufilled=self.FufilledEntry.get()
         Date=self.DateEntry.get()
         Time=self.TimeEntry.get()
-        CustomerID=self.CustomerIDEntry.get()
+        
+        # Cant get access to ADVCustomerID as ot is in another class
+        CustomerID=self.ADV_CustomerID.get()
         if len(CustomerID) == 0:
+            CustomerID=self.CustomerIDEntry.get()
+        elif len(CustomerID) == 0:
             CustomerID=self.customer.get()
 
         db =sqlite3.connect("main.db")
@@ -978,6 +905,92 @@ class new_booking():
         else:
             print("\n---------------------------------------------\n~~New Booking Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
+
+        
+class new_login():
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Add New Login")
+        self.master.configure(background='turquoise3')
+        
+        self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Escape>", self.end_fullscreen)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
+        
+        # New_Login Window Buttons
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
+
+    
+    # New Login Label
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
+        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
+
+    # New Login Entry
+        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry.grid(row=1,column=1,pady=10,columnspan=2)
+        
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry.grid(row=2,column=1,pady=10,columnspan=2)
+
+    
+    # Quit Program
+    def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[(ct)])
+        db.commit()
+        
+        quit()
+    
+    # Toggling full screen
+    def toggle_fullscreen(self, event=None):
+        self.state = not self.state 
+        self.master.attributes("-fullscreen", self.state)
+        return "break"
+    def end_fullscreen(self, event=None):
+        self.state = False
+        self.master.attributes("-fullscreen", False)
+        return "break"    
+    
+    # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=addWindow(root2)
+        
+    # Adding To Database
+    def addTo(self):
+        email=self.emailEntry.get()
+        password=self.passwordEntry.get()
+
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        sql = """INSERT INTO Login(StaffEmail,StaffPassword)
+            VALUES(?,?)"""
+        cursor.execute(sql,[(email),(password)])
+        
+        if len(email) > 0 and len(password) > 0 :
+            db.commit()
+            print("\n---------------------------------------------\nNew Login Committed")
+            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
+        else:
+            print("\n---------------------------------------------\n~~New Login Commit Failed")
+            Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
 
 class new_vehicle():
