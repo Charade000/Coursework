@@ -99,6 +99,10 @@ class Home():
                     VALUES("Joe","King","ma@example.com",01282622067)"""
                 cursor.execute(sql)
                 db.commit()
+                sql="""INSERT into Customer(Forename,Surname,Email,MobileNum)
+                    VALUES("John","Dane","nextman@gmail.com",111111111)"""
+                cursor.execute(sql)
+                db.commit()
                 print("~~Test Customers Created~~")
     
     # Creating Master Login Database Or Checking If It Exist
@@ -824,10 +828,10 @@ class new_booking():
         Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
+        Button(self.master,text='Find Customer',command=self.find_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=12,column=5)
 
     
     # New Customer Label
-        Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
         Label(self.master,text='StartStreetNum',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
         Label(self.master,text='StartStreet',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
         Label(self.master,text='StartPostcode',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
@@ -837,13 +841,13 @@ class new_booking():
         Label(self.master,text='Fufilled',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
         Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10,padx=10)
         Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10,padx=10)
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10,padx=10)
+        Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10)
+        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
+        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
 
 
 
     # New Booking Entry
-        self.CustomerIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.CustomerIDEntry.grid(row=1,column=1,pady=10,columnspan=2)
         
         self.StartStreetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.StartStreetNumEntry.grid(row=2,column=1,pady=10,columnspan=2)
@@ -872,8 +876,15 @@ class new_booking():
         self.TimeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.TimeEntry.grid(row=10,column=1,pady=10,columnspan=2)
         
+        self.CustomerIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.CustomerIDEntry.grid(row=11,column=1,pady=10,columnspan=2)
+        
         self.ForenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.ForenameEntry.grid(row=11,column=1,pady=10,columnspan=2)
+        self.ForenameEntry.grid(row=2,column=4,pady=10,columnspan=2)
+        
+        self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
+        
     
     
     # Quit Program
@@ -910,11 +921,37 @@ class new_booking():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=addWindow(root2)
+    
+    # Find CustomerID
+    def find_customer(self):
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
         
+        Forename=self.ForenameEntry.get()
+        Surname=self.SurnameEntry.get()
+        
+        if len(Forename) >=  1 :
+            sql = """SELECT CustomerID FROM CUSTOMER WHERE Forename LIKE ?"""
+            cursor.execute(sql,[(Forename)])
+            result=cursor.fetchall()
+            if result:
+                Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=12,column=5)
+        elif len(Surname) >= 1:
+            sql = """SELECT CustomerID FROM CUSTOMER WHERE Surname LIKE ?"""
+            cursor.execute(sql,[(Surname)])
+            result=cursor.fetchall()
+        if result:
+            Label(self.master,text='Customer Found',bg='PaleTurquoise1',font='Bembo',fg='red').grid(row=12,column=5)
+            #################
+            # Turn To DropBox
+            print(result)
+            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=12,column=6,pady=10,padx=10)
+            ###############################
+            
+        customer=result
+
     # Adding To Database
     def addTo(self):
-        Forename=self.ForenameEntry.get()
-        CustomerID=self.CustomerIDEntry.get()
         StartStreetNum=self.StartStreetNumEntry.get()
         StartStreet=self.StartStreetEntry.get()
         StartPostcode=self.StartPostcodeEntry.get()
@@ -924,31 +961,17 @@ class new_booking():
         Fufilled=self.FufilledEntry.get()
         Date=self.DateEntry.get()
         Time=self.TimeEntry.get()
-###
-
+        CustomerID=self.CustomerIDEntry.get()
+        if len(CustomerID) == 0:
+            CustomerID=self.customer.get()
 
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
+        sql = """INSERT INTO Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
+            VALUES(?,?,?,?,?,?,?,?,?,?)"""
+        cursor.execute(sql,[(CustomerID),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
         
-        if len(Forename) <= 0 :
-            sql = """SELECT FORENAME FROM CUSTOMER WHERE CustomerID LIKE ?"""
-            cursor.execute(sql,[(CustomerID)])
-            result=cursor.fetchall()
-            if result:
-                Label(self.master,text='Forename Found',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
-        elif len(CustomerID) <= 0:
-            sql = """SELECT CustomerID FROM CUSTOMER WHERE CustomerID LIKE ?"""
-            cursor.execute(sql,[(CustomerID)])
-            result=cursor.fetchall()
-            if result:
-                Label(self.master,text='Forename Found',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
-#TODO##################################
-        
-        sql = """INSERT INTO Bookings(Forename,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(Forename),(result),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
-        
-        if len(Forename) >= 0 and len(CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
+        if len(CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
             db.commit()
             print("\n---------------------------------------------\nNew Booking Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
