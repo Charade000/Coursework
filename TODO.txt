@@ -17,7 +17,7 @@ middleman for drivers. When 'available' drivers can choose to logins
 on new booking there should be a drop down bar which shows customers to select
 
 create the document with qa and email
- 
+
 1) recreate the layout
 2) data structures
 3)automate cost
@@ -31,3 +31,7 @@ map api
 email api
 whatss app Confirmation
 
+###
+the ability to add a staff id connected with login on the staff one
+the vehicle staff id needs to be automated 
+ability to change things 9update

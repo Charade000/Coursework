@@ -172,13 +172,14 @@ class Home():
                     Fufilled TEXT NOT NULL,
                     Date TEXT NOT NULL,
                     Time TEXT NOT NULL,
-                    Forename TEXT NOT NULL)"""
+                    Forename TEXT NOT NULL,
+                    Driver TEXT NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
                 print("Bookings Table Created")
                 # Adding Fake Data For Testing
-                sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename)
-                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy")"""
+                sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
+                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy","")"""
                 cursor.execute(sql)
                 
                 db.commit()
@@ -314,7 +315,7 @@ class loginMenu():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=DriverLogin(root2)
-    
+
 ########################################################################################################################################################
 ########################################################################################################################################################
 
@@ -525,8 +526,6 @@ class addWindow():
         Button(self.master,text='Add Booking',command=self.add_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Add Vehicle',command=self.add_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
         Button(self.master,text='Add Staff',command=self.add_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
-        Button(self.master,text='Add Driver',command=self.add_driver,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
-
 
     # Quit Program
     def end(self):
@@ -725,7 +724,7 @@ class new_customer():
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        
+
 class new_booking():
     def __init__(self, master):
         self.master = master
@@ -743,7 +742,7 @@ class new_booking():
         Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find Customer',command=self.find_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=12,column=5)
+        Button(self.master,text='Find Customer',command=self.find_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
 
     
     # New Customer Label
@@ -761,8 +760,9 @@ class new_booking():
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
         
         # Cant get ADV_CustomerID Is in another class
-        ADV_CustomerID=0
-        CustomerIDS=self.ADV_CustomerID.get()
+        # Should automatically recognise CustomerID and display
+        CustomerIDS=0
+        #CustomerIDS=self.ADV_CustomerID.get()
         if CustomerIDS > 0:
             Label(self.master,text='CustomerID =',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
             Label(self.master,text=CustomerIDS,bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
@@ -857,17 +857,18 @@ class new_booking():
             cursor.execute(sql,[(Forename)])
             result=cursor.fetchall()
             if result:
-                Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=12,column=5)
+                l=Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=4,column=5,padx=9)
         elif len(Surname) >= 1:
             sql = """SELECT CustomerID FROM CUSTOMER WHERE Surname LIKE ?"""
             cursor.execute(sql,[(Surname)])
             result=cursor.fetchall()
-        if result:
-            Label(self.master,text='Customer Found',bg='PaleTurquoise1',font='Bembo',fg='red').grid(row=12,column=5)
+            if result:
+                l=Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=4,column=5,padx=9)
+
             #################
             # Turn To DropBox
             print(result)
-            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=12,column=6,pady=10,padx=10)
+            Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=6,padx=10)
             ###############################
             
         customer=result
@@ -886,7 +887,7 @@ class new_booking():
         Time=self.TimeEntry.get()
         
         # Cant get access to ADVCustomerID as ot is in another class
-        CustomerID=self.ADV_CustomerID.get()
+        #CustomerID=self.ADV_CustomerID.get()
         if len(CustomerID) == 0:
             CustomerID=self.CustomerIDEntry.get()
         elif len(CustomerID) == 0:
@@ -906,7 +907,6 @@ class new_booking():
             print("\n---------------------------------------------\n~~New Booking Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
 
-        
 class new_login():
     def __init__(self, master):
         self.master = master
@@ -992,7 +992,6 @@ class new_login():
             print("\n---------------------------------------------\n~~New Login Commit Failed")
             Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
-
 class new_vehicle():
     def __init__(self, master):
         self.master = master
@@ -1010,7 +1009,7 @@ class new_vehicle():
         Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find',command=self.find,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
+        Button(self.master,text='Find',command=self.find_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=5,column=6,padx=10)
 
     
     # New Customer Label
@@ -1021,8 +1020,10 @@ class new_vehicle():
         Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
         Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
         Label(self.master,text='Find StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=4,pady=10,padx=10)
-        Label(self.master,text='Forname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
+        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
+        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
+        Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
 
     # New Customer Entry
         self.MOTEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
@@ -1043,11 +1044,17 @@ class new_vehicle():
         self.StaffIdEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.StaffIdEntry.grid(row=6,column=1,pady=10,columnspan=2)
         
-        self.FornameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.FornameEntry.grid(row=2,column=4,pady=10,columnspan=2)
+        self.ForenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.ForenameEntry.grid(row=2,column=4,pady=10,columnspan=2)
         
         self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
+        
+        self.EmailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.EmailEntry.grid(row=4,column=4,pady=10,columnspan=2)
+        
+        self.PostcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.PostcodeEntry.grid(row=5,column=4,pady=10,columnspan=2)
         
     
     # Quit Program
@@ -1084,7 +1091,8 @@ class new_vehicle():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=addWindow(root2)
-        
+    
+    
     # Adding To Database
     def addTo(self):
         MOT=self.MOTEntry.get()
@@ -1093,6 +1101,9 @@ class new_vehicle():
         make=self.MakeEntry.get()
         availability=self.AvailabilityEntry.get()
         staff=self.StaffIdEntry.get()
+        print(staff)
+        if staff==0:
+            staff=self.staff_auto.get()
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
@@ -1100,7 +1111,7 @@ class new_vehicle():
             VALUES(?,?,?,?,?,?)"""
         cursor.execute(sql,[(MOT),(mileage),(seats),(make),(availability),(staff)])
         
-        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and len(staff) > 0:
+        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and staff > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Vehicle Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
@@ -1108,19 +1119,47 @@ class new_vehicle():
             print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
 
-    def find(self):
-            forname=self.FornameEntry.get()
-            surname=self.SurnameEntry.get()
-            
-            db =sqlite3.connect("main.db")
-            cursor = db.cursor()
-            sql = """SELECT StaffID from Staff WHERE Forename = ? AND Surname = ?"""
-            cursor.execute(sql,[(forname),(surname)])
+    def find_staff(self):
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        
+        Forename=self.ForenameEntry.get()
+        Surname=self.SurnameEntry.get()
+        Email=self.EmailEntry.get()
+        Postcode=self.PostcodeEntry.get()
+        
+        if len(Forename) >=  1 :
+            sql = """SELECT StaffID FROM Staff WHERE Forename LIKE ?"""
+            cursor.execute(sql,[(Forename)])
             result=cursor.fetchall()
-            
             if result:
-                Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=4,pady=10,padx=10)
+                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
+        elif len(Surname) >= 1:
+            sql = """SELECT StaffID FROM Staff WHERE Surname LIKE ?"""
+            cursor.execute(sql,[(Surname)])
+            result=cursor.fetchall()
+            if result:
+                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
+        elif len(Email) >=  1 :
+            sql = """SELECT StaffID FROM Staff WHERE Email LIKE ?"""
+            cursor.execute(sql,[(Email)])
+            result=cursor.fetchall()
+            if result:
+                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
+        elif len(Postcode) >= 1:
+            sql = """SELECT StaffID FROM Staff WHERE Postcode LIKE ?"""
+            cursor.execute(sql,[(Postcode)])
+            result=cursor.fetchall()
+            if result:
+                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
 
+            #################
+            # Turn To DropBox
+        print(result)
+        Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=4,padx=10)
+            ###############################
+            
+        staff_auto=result
 class new_staff():
     def __init__(self, master):
         self.master = master
