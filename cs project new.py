@@ -865,7 +865,10 @@ class new_booking():
         Time=self.TimeEntry.get()
         
         # Cant get access to ADVCustomerID as ot is in another class
-        CustomerID=str(ADV_CustomerID)
+        #fixed with global variables
+        #cant make result from list to int
+
+        CustomerID=ADV_CustomerID
         if CustomerID == 0:
             CustomerID=self.CustomerIDEntry.get()
         elif CustomerID == 0:
