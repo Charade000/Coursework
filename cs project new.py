@@ -690,9 +690,11 @@ class new_customer():
         
             sql = """SELECT CustomerID FROM Customer WHERE Forename = ?"""
             cursor.execute(sql,[(forename)])
+            global ADV_CustomerID
             ADV_CustomerID=cursor.fetchall()
+            cursor.close()
         # Cant get access to ADVCustomerID as ot is in another class
-
+            
             self.master.withdraw()
             root2=Toplevel(self.master)
             root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
@@ -863,7 +865,7 @@ class new_booking():
         Time=self.TimeEntry.get()
         
         # Cant get access to ADVCustomerID as ot is in another class
-        #CustomerID=self.ADV_CustomerID.get()
+        CustomerID=str(ADV_CustomerID)
         if CustomerID == 0:
             CustomerID=self.CustomerIDEntry.get()
         elif CustomerID == 0:
