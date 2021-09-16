@@ -32,6 +32,7 @@ email api
 whatss app Confirmation
 
 ###
-the ability to add a staff id connected with login on the staff one
-the vehicle staff id needs to be automated 
+Vehichle and customer have hit the list issue
+vehicle cant read adv
+ 
 ability to change things 9update

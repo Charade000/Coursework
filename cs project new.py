@@ -1,3 +1,4 @@
+from string import printable
 from tkinter import *
 from tkinter import ttk
 import sqlite3
@@ -34,7 +35,9 @@ class Home():
 
     # Quit Program
     def end(self):
+        db.close()
         quit()
+        
     
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
@@ -67,6 +70,7 @@ class Home():
         sql =  "SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(sql)
         names = [row[0] for row in cursor.fetchall()]
+        db.close()
         return names
 
     # Creating Customer Database Or Checking If It Exist
@@ -103,6 +107,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Customers Created~~")
+                db.close()
     
     # Creating Master Login Database Or Checking If It Exist
     def createMasterLoginTable(self,dbName):
@@ -127,6 +132,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Master Logins Created~~")
+                db.close()
 
     
     # Creating Bookings Database Or Checking If It Exist
@@ -160,6 +166,7 @@ class Home():
                 
                 db.commit()
                 print("~~Test Bookings Created~~")
+                db.close()
     
     # Creating Vehicle Database Or Checking If It Exist
     def createVehicleTable(self,dbName):
@@ -189,6 +196,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Vehicles Created~~")
+                db.close()
     
     # Creating Staff Database Or Checking If It Exist
     def createStaffTable(self,dbName):
@@ -221,6 +229,7 @@ class Home():
                     VALUES("Terry","Johnson","staff@hypothetical.com","079878556408","Taxi","Available",3,"Granby Street","Burnley","BB12 0PP")"""
                 cursor.execute(sql)
                 db.commit()
+                db.close()
 
     # Creating Staff Database Or Checking If It Exist
     def createTimeTable(self,dbName):
@@ -238,6 +247,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("---------------------------------------------\Time Table Created")
+                db.close()
 
 class loginMenu():
     def __init__(self, master):
@@ -261,6 +271,7 @@ class loginMenu():
     
     # Quit Program
     def end(self):
+        db.close()
         quit()
 
     # Toggling full screen
@@ -328,6 +339,7 @@ class MasterLogin():
     
     # Quit Program
     def end(self):
+        db.close()
         quit()
 
     # Toggling full screen
@@ -371,6 +383,7 @@ class MasterLogin():
         else:
             print("Login Failed")
             Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=4)
+        db.close()
 
     # Redirecting After Login Page
     def menu(self):
@@ -398,6 +411,7 @@ class MasterLogin():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=MasterMenu(root2)
+        db.close()
 
 class MasterMenu():
     def __init__(self, master):
@@ -414,7 +428,7 @@ class MasterMenu():
         # Menu Up Page Buttons
         Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
         Button(self.master,text='Add',command=self.add_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Show',command=self.show_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        Button(self.master,text='Show and Update',command=self.show_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
 
@@ -433,7 +447,7 @@ class MasterMenu():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -472,6 +486,7 @@ class MasterMenu():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=MasterLogin(root2)
+        db.close()
         
     def show_data(self):
         self.master.withdraw()
@@ -518,7 +533,7 @@ class addWindow():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -629,7 +644,7 @@ class new_customer():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -669,6 +684,7 @@ class new_customer():
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        db.close()
             
     def advBooking(self):
         forename=self.forenameEntry.get()
@@ -702,6 +718,7 @@ class new_customer():
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        db.close()
 
 class new_booking():
     def __init__(self, master):
@@ -746,7 +763,6 @@ class new_booking():
             Label(self.master,text=CustomerIDS,bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
 
 
-
     # New Booking Entry
         
         self.StartStreetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
@@ -784,7 +800,6 @@ class new_booking():
         
         self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-        
     
     
     # Quit Program
@@ -802,7 +817,7 @@ class new_booking():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[ct])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -850,6 +865,7 @@ class new_booking():
             ###############################
             
         customer=result
+        db.close()
 
     # Adding To Database
     def addTo(self):
@@ -867,7 +883,8 @@ class new_booking():
         # Cant get access to ADVCustomerID as ot is in another class
         #fixed with global variables
         #cant make result from list to int
-
+        if ADV_CustomerID > 0:
+            print (ADV_CustomerID)
         CustomerID=ADV_CustomerID
         if CustomerID == 0:
             CustomerID=self.CustomerIDEntry.get()
@@ -887,6 +904,7 @@ class new_booking():
         else:
             print("\n---------------------------------------------\n~~New Booking Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
+        db.close()
 
 class new_login():
     def __init__(self, master):
@@ -933,7 +951,7 @@ class new_login():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -972,6 +990,7 @@ class new_login():
         else:
             print("\n---------------------------------------------\n~~New Login Commit Failed")
             Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        db.close()
 
 class new_vehicle():
     def __init__(self, master):
@@ -1053,7 +1072,7 @@ class new_vehicle():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -1082,23 +1101,23 @@ class new_vehicle():
         make=self.MakeEntry.get()
         availability=self.AvailabilityEntry.get()
         staff=self.StaffIdEntry.get()
-        print(staff)
+        staff=self.staff_auto.get()
         if staff==0:
-            staff=self.staff_auto.get()
-        
+            print(staff)
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
         sql = """INSERT INTO Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
             VALUES(?,?,?,?,?,?)"""
         cursor.execute(sql,[(MOT),(mileage),(seats),(make),(availability),(staff)])
         
-        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0 and staff > 0:
+        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0:
             db.commit()
             print("\n---------------------------------------------\nNew Vehicle Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
         else:
             print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        db.close()
 
     def find_staff(self):
         db =sqlite3.connect("main.db")
@@ -1141,6 +1160,8 @@ class new_vehicle():
             ###############################
             
         staff_auto=result
+        db.close()
+
 class new_staff():
     def __init__(self, master):
         self.master = master
@@ -1218,7 +1239,7 @@ class new_staff():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -1264,6 +1285,7 @@ class new_staff():
         else:
             print("\n---------------------------------------------\n~~New Staff Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
+        db.close()
 
 #################
 class showWindow():
@@ -1306,7 +1328,7 @@ class showWindow():
             WHERE LogOut = 'NULL'"""
         cursor.execute(sql,[(ct)])
         db.commit()
-        
+        db.close()
         quit()
     
     # Toggling full screen
@@ -1398,6 +1420,7 @@ class DriverLogin():
     
     # Quit Program
     def end(self):
+        db.close()
         quit()
 
     # Toggling full screen
@@ -1441,6 +1464,7 @@ class DriverLogin():
         else:
             print("Login Failed")
             Label(self.master,text='Login Failed',bg='turquoise3',font='Bembo',fg='red').grid(row=2,column=4)
+        db.close()
 
     # Redirecting After Login Page
     def menu(self):
@@ -1463,6 +1487,7 @@ class DriverLogin():
             VALUES(?,?,?)"""
         cursor.execute(sql,[(email),(ct),('NULL')])
         db.commit()
+        db.close()
         
         self.master.withdraw()
         root2=Toplevel(self.master)
