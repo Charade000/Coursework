@@ -499,6 +499,7 @@ class addWindow():
         self.master = master
         self.master.title("Add")
         self.master.configure(background='turquoise3')
+        self.ADV_CustomerID=0
         
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
@@ -569,7 +570,7 @@ class addWindow():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_booking(root2)
+        muGUI=new_booking(root2,self.ADV_CustomerID)
     
     def add_vehicle(self):
         self.master.withdraw()
@@ -691,6 +692,7 @@ class new_customer():
         email=self.emailEntry.get()
         mobile=self.mobileEntry.get()
         
+        
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
 
@@ -705,25 +707,26 @@ class new_customer():
         
             sql = """SELECT CustomerID FROM Customer WHERE Forename = ?"""
             cursor.execute(sql,[(forename)])
-            global ADV_CustomerID
-            ADV_CustomerID=cursor.fetchall()
+            self.ADV_CustomerID=cursor.fetchall()
+            db.close()
             cursor.close()
         # Cant get access to ADVCustomerID as ot is in another class
             
             self.master.withdraw()
             root2=Toplevel(self.master)
             root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-            muGUI=new_booking(root2)
+            muGUI=new_booking(root2,self.ADV_CustomerID)
         else:
             print("\n---------------------------------------------\n~~New Customer Commit Failed")
             Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
         db.close()
 
 class new_booking():
-    def __init__(self, master):
+    def __init__(self, master,ADV_CustomerID):
         self.master = master
         self.master.title("Add New Booking")
         self.master.configure(background='turquoise3')
+        self.NewCustomerID=ADV_CustomerID
         
         # Binding F11 and ESCAPE keys to full screen
         self.master.bind("<F11>", self.toggle_fullscreen)
@@ -863,7 +866,7 @@ class new_booking():
         Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=6,padx=10)
             ###############################
             
-        customer=result
+        FScustomer=result
         db.close()
 
     # Adding To Database
@@ -878,17 +881,14 @@ class new_booking():
         Fufilled=self.FufilledEntry.get()
         Date=self.DateEntry.get()
         Time=self.TimeEntry.get()
-        
-        # Cant get access to ADVCustomerID as ot is in another class
-        #fixed with global variables
-        #cant make result from list to int
-        if ADV_CustomerID > 0:
-            print (ADV_CustomerID)
-        CustomerID=ADV_CustomerID
         if CustomerID == 0:
             CustomerID=self.CustomerIDEntry.get()
-        elif CustomerID == 0:
-            CustomerID=self.customer.get()
+        if CustomerID == 0:
+            CustomerID=self.FScustomer.get()
+        if CustomerID == 0:
+            CustomerID=self.NewCustomerID.get()
+
+        #NewCustomerID Needs To turn integer
 
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
