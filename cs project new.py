@@ -323,7 +323,7 @@ class MasterLogin():
         # Entry Page Entry
         self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.emailEntry.grid(row=2,column=2,pady=10,columnspan=2)
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35,show = "*")
         self.passwordEntry.grid(row=3,column=2,columnspan=2)
 
         # Login Page Buttons
@@ -337,7 +337,6 @@ class MasterLogin():
     
     # Quit Program
     def end(self):
-        db.close()
         quit()
 
     # Toggling full screen
@@ -627,8 +626,6 @@ class new_customer():
         self.mobileEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.mobileEntry.grid(row=4,column=1,pady=10,columnspan=2)
 
-
-    
     # Quit Program
     def end(self):
         t = time()
@@ -708,9 +705,6 @@ class new_customer():
             sql = """SELECT CustomerID FROM Customer WHERE Forename = ?"""
             cursor.execute(sql,[(forename)])
             self.ADV_CustomerID=cursor.fetchall()
-            db.close()
-            cursor.close()
-        # Cant get access to ADVCustomerID as ot is in another class
             
             self.master.withdraw()
             root2=Toplevel(self.master)
@@ -722,7 +716,7 @@ class new_customer():
         db.close()
 
 class new_booking():
-    def __init__(self, master,ADV_CustomerID):
+    def __init__(self,master,ADV_CustomerID):
         self.master = master
         self.master.title("Add New Booking")
         self.master.configure(background='turquoise3')
@@ -741,7 +735,6 @@ class new_booking():
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
         Button(self.master,text='Find Customer',command=self.find_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
 
-    
     # New Customer Label
         Label(self.master,text='StartStreetNum',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
         Label(self.master,text='StartStreet',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
@@ -753,6 +746,7 @@ class new_booking():
         Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10,padx=10)
         Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10,padx=10)
         Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10)
+        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=12,column=0,pady=10,padx=10)
         Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
         Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
         
@@ -763,7 +757,6 @@ class new_booking():
         if CustomerIDS > 0:
             Label(self.master,text='CustomerID =',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
             Label(self.master,text=CustomerIDS,bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
-
 
     # New Booking Entry
         
@@ -798,11 +791,13 @@ class new_booking():
         self.CustomerIDEntry.grid(row=11,column=1,pady=10,columnspan=2)
         
         self.ForenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.ForenameEntry.grid(row=2,column=4,pady=10,columnspan=2)
+        self.ForenameEntry.grid(row=12,column=1,pady=10,columnspan=2)
+        
+        self.ForenameEntryf=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.ForenameEntryf.grid(row=2,column=4,pady=10,columnspan=2)
         
         self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-    
     
     # Quit Program
     def end(self):
@@ -827,6 +822,7 @@ class new_booking():
         self.state = not self.state 
         self.master.attributes("-fullscreen", self.state)
         return "break"
+    
     def end_fullscreen(self, event=None):
         self.state = False
         self.master.attributes("-fullscreen", False)
@@ -844,7 +840,7 @@ class new_booking():
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
         
-        Forename=self.ForenameEntry.get()
+        Forename=self.ForenameEntryf.get()
         Surname=self.SurnameEntry.get()
         
         if len(Forename) >=  1 :
@@ -878,6 +874,7 @@ class new_booking():
         DestinationStreetNum =self.DestinationStreetNumEntry.get()
         DestinationStreet=self.DestinationStreetEntry.get()
         DestinationPostcode=self.DestinationPostcodeEntry.get()
+        Forename=self.forenameEntry.get()
         Fufilled=self.FufilledEntry.get()
         Date=self.DateEntry.get()
         Time=self.TimeEntry.get()
@@ -892,11 +889,11 @@ class new_booking():
 
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """INSERT INTO Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
+        sql = """INSERT INTO Bookings(CustomerID,Forename,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
             VALUES(?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(CustomerID),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
+        cursor.execute(sql,[(CustomerID),(Forename),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
         
-        if (CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time):
+        if (CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time) and len(Forename)> 0:
             db.commit()
             print("\n---------------------------------------------\nNew Booking Committed")
             Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
@@ -2063,7 +2060,7 @@ class DriverLogin():
         # Entry Page Entry
         self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.emailEntry.grid(row=2,column=2,pady=10,columnspan=2)
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35,show = "*")
         self.passwordEntry.grid(row=3,column=2,columnspan=2)
 
         # Login Page Buttons

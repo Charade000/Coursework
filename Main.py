@@ -302,7 +302,7 @@ class loginWindow():
         # Entry Page Entry
         self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.emailEntry.grid(row=2,column=2,pady=10,columnspan=2)
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35,show = "*")
         self.passwordEntry.grid(row=3,column=2,columnspan=2)
 
         # Login Page Buttons

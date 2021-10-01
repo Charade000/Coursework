@@ -10,7 +10,7 @@ https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP
 
 
 
-boking manageent that sends bookings to drivers who can individually accepted
+booking management that sends bookings to drivers who can individually accepted
 crm        
 middleman for drivers. When 'available' drivers can choose to logins
 
@@ -20,7 +20,7 @@ create the document with qa and email
 
 1) recreate the layout
 2) data structures
-3)automate cost
+3) automate cost
 4)regular expressions to check
 5) hash passwords 
 6) recursive clock 
@@ -39,3 +39,14 @@ tree view to update and show
 
 https://app.creately.com/diagram/hECxhkHIUKm/edit
 erd
+
+
+interview
+
+1)	Nadeem Sarwar I am the director
+2)	The new system would need a system which is gping tpo organise our customer and driver database. The system must be able to view and edit taxi bookings and have a safety features.
+4)wordpress system which shows data from a database and organises them
+5) maps inbedded, when the customer goes on website it maps the journey. Automated price based on miles £1.50 mile
+6)email not automated manual    everything more automated   monthly cost
+Has not got a database needs to be combined    easier to manage   need a unified system   filetr by place    separate bookings
+website
