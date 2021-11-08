@@ -1,7 +1,6 @@
 1.Automate cost. map api, use postcode        6
 2.Regular expressions to check correct format eg. postcode    5
 3.Email api   ,   whatsapp confirmation
-4.Treeweiw for da tabase                 4
 5.Hash passwords and salts                 1
 6.Data structure stacks, queues           3
 7.recursive      ,clock            4

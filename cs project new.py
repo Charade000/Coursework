@@ -431,7 +431,6 @@ class MasterMenu():
         
         # Menu Up Page Buttons
         Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.add_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
         Button(self.master,text='Show and Update',command=self.show_data,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
@@ -463,12 +462,7 @@ class MasterMenu():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"
-    
-    def add_data(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
+
         
     # Return To Login Screen
     def back(self):
@@ -498,799 +492,7 @@ class MasterMenu():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=showWindow(root2)
 
-###############
-class addWindow():
-
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add")
-        self.master.configure(background='turquoise3')
-        self.ADV_CustomerID=0
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # Sign Up Page Buttons
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        
-        Button(self.master,text='Add Customer',command=self.add_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=0)
-        Button(self.master,text='Add Login',command=self.add_login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=1)
-        Button(self.master,text='Add Booking',command=self.add_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
-        Button(self.master,text='Add Vehicle',command=self.add_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
-        Button(self.master,text='Add Staff',command=self.add_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
-
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"
-    
-    # Return To 'Home' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=MasterMenu(root2)
-        
-        
-    def add_customer(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_customer(root2)
-    
-    def add_login(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_login(root2)
-    
-    def add_booking(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_booking(root2,self.ADV_CustomerID)
-    
-    def add_vehicle(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_vehicle(root2)
-    
-    def add_staff(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=new_staff(root2)
-        
-    def add_driver(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-
-class new_customer():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Customer")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add Customer',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Add And Continue',command=self.advBooking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=4)
-    
-    # New Customer Label
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='Mobile Number',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-
-    # New Customer Entry
-        self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
-        
-        self.surnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.surnameEntry.grid(row=2,column=1,pady=10,columnspan=2)
-        
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.emailEntry.grid(row=3,column=1,pady=10,columnspan=2)
-        
-        self.mobileEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.mobileEntry.grid(row=4,column=1,pady=10,columnspan=2)
-
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-        
-    # Adding To Database
-    def addTo(self):
-        forename=self.forenameEntry.get()
-        surname=self.surnameEntry.get()
-        email=self.emailEntry.get()
-        mobile=self.mobileEntry.get()
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Customer(Forename,Surname,Email,MobileNum)
-            VALUES(?,?,?,?)"""
-        cursor.execute(sql,[(forename),(surname),(email),(mobile)])
-        
-        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile):
-            db.commit()
-            print("\n---------------------------------------------\nNew Customer Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Customer Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        db.close()
-            
-    def advBooking(self):
-        forename=self.forenameEntry.get()
-        surname=self.surnameEntry.get()
-        email=self.emailEntry.get()
-        mobile=self.mobileEntry.get()
-        
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-
-        sql = """INSERT INTO Customer(Forename,Surname,Email,MobileNum)
-            VALUES(?,?,?,?)"""
-        cursor.execute(sql,[(forename),(surname),(email),(mobile)])
-        
-        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile):
-            db.commit()
-            print("\n---------------------------------------------\nNew Customer Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        
-            sql = """SELECT CustomerID FROM Customer WHERE Forename = ?"""
-            cursor.execute(sql,[(forename)])
-            self.ADV_CustomerID=cursor.fetchall()
-            
-            self.master.withdraw()
-            root2=Toplevel(self.master)
-            root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-            muGUI=new_booking(root2,self.ADV_CustomerID)
-        else:
-            print("\n---------------------------------------------\n~~New Customer Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        db.close()
-
-class new_booking():
-    def __init__(self,master,ADV_CustomerID):
-        self.master = master
-        self.master.title("Add New Booking")
-        self.master.configure(background='turquoise3')
-        self.NewCustomerID=ADV_CustomerID
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find Customer',command=self.find_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=3,column=6,padx=10)
-
-    # New Customer Label
-        Label(self.master,text='StartStreetNum',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='StartStreet',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='StartPostcode',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-        Label(self.master,text='DestinationStreetNum',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
-        Label(self.master,text='DestinationStreet',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
-        Label(self.master,text='DestinationPostcode',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
-        Label(self.master,text='Fufilled',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
-        Label(self.master,text='Date',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10,padx=10)
-        Label(self.master,text='Time',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10,padx=10)
-        Label(self.master,text='CustomerID',bg='turquoise3',font='Bembo',fg='black').grid(row=11,column=0,pady=10)
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=12,column=0,pady=10,padx=10)
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
-        
-        # Cant get ADV_CustomerID Is in another class
-        # Should automatically recognise CustomerID and display
-        CustomerIDS=0
-        #CustomerIDS=self.ADV_CustomerID.get()
-        if CustomerIDS > 0:
-            Label(self.master,text='CustomerID =',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
-            Label(self.master,text=CustomerIDS,bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
-
-    # New Booking Entry
-        
-        self.StartStreetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StartStreetNumEntry.grid(row=2,column=1,pady=10,columnspan=2)
-
-        self.StartStreetEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StartStreetEntry.grid(row=3,column=1,pady=10,columnspan=2)
-        
-        self.StartPostcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StartPostcodeEntry.grid(row=4,column=1,pady=10,columnspan=2)
-
-        self.DestinationStreetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DestinationStreetNumEntry.grid(row=5,column=1,pady=10,columnspan=2)
-        
-        self.DestinationStreetEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DestinationStreetEntry.grid(row=6,column=1,pady=10,columnspan=2)
-        
-        self.DestinationPostcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DestinationPostcodeEntry.grid(row=7,column=1,pady=10,columnspan=2)
-        
-        self.FufilledEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.FufilledEntry.grid(row=8,column=1,pady=10,columnspan=2)
-        
-        self.DateEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.DateEntry.grid(row=9,column=1,pady=10,columnspan=2)
-        
-        self.TimeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.TimeEntry.grid(row=10,column=1,pady=10,columnspan=2)
-        
-        self.CustomerIDEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.CustomerIDEntry.grid(row=11,column=1,pady=10,columnspan=2)
-        
-        self.ForenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.ForenameEntry.grid(row=12,column=1,pady=10,columnspan=2)
-        
-        self.ForenameEntryf=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.ForenameEntryf.grid(row=2,column=4,pady=10,columnspan=2)
-        
-        self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-    
-    # Find CustomerID
-    def find_customer(self):
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        
-        Forename=self.ForenameEntryf.get()
-        Surname=self.SurnameEntry.get()
-        
-        if len(Forename) >=  1 :
-            sql = """SELECT CustomerID FROM CUSTOMER WHERE Forename LIKE ?"""
-            cursor.execute(sql,[(Forename)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=4,column=5,padx=9)
-        elif len(Surname) >= 1:
-            sql = """SELECT CustomerID FROM CUSTOMER WHERE Surname LIKE ?"""
-            cursor.execute(sql,[(Surname)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Customer Found',bg='turquoise3',font='Bembo',fg='red').grid(row=4,column=5,padx=9)
-
-            #################
-            # Turn To DropBox
-        print(result)
-        Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=6,padx=10)
-            ###############################
-            
-        FScustomer=result
-        db.close()
-
-    # Adding To Database
-    def addTo(self):
-        CustomerID =  0
-        StartStreetNum=self.StartStreetNumEntry.get()
-        StartStreet=self.StartStreetEntry.get()
-        StartPostcode=self.StartPostcodeEntry.get()
-        DestinationStreetNum =self.DestinationStreetNumEntry.get()
-        DestinationStreet=self.DestinationStreetEntry.get()
-        DestinationPostcode=self.DestinationPostcodeEntry.get()
-        Forename=self.forenameEntry.get()
-        Fufilled=self.FufilledEntry.get()
-        Date=self.DateEntry.get()
-        Time=self.TimeEntry.get()
-        if CustomerID == 0:
-            CustomerID=self.CustomerIDEntry.get()
-        if CustomerID == 0:
-            CustomerID=self.FScustomer.get()
-        if CustomerID == 0:
-            CustomerID=self.NewCustomerID.get()
-
-        #NewCustomerID Needs To turn integer
-
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Bookings(CustomerID,Forename,StartStreetNum,StartStreet,StartPostcode,DestinationStreetnum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time)
-            VALUES(?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(CustomerID),(Forename),(StartStreetNum),(StartStreet),(StartPostcode),(DestinationStreetNum),(DestinationStreet),(DestinationPostcode),(Fufilled),(Date),(Time)])
-        
-        if (CustomerID) >= 0 and len(StartStreetNum) > 0 and len(StartStreet) > 0 and len(StartPostcode) > 0 and len(DestinationStreetNum) > 0 and len(DestinationStreet) > 0 and len(DestinationPostcode) > 0 and len(Fufilled) > 0 and len(Date) > 0 and len(Time) and len(Forename)> 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Booking Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=9,column=1)
-        else:
-            print("\n---------------------------------------------\n~~New Booking Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=9,column=1)
-        db.close()
-
-class new_login():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Login")
-        self.master.configure(background='turquoise3')
-        
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Login Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-
-    
-    # New Login Label
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-
-    # New Login Entry
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.emailEntry.grid(row=1,column=1,pady=10,columnspan=2)
-        
-        self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.passwordEntry.grid(row=2,column=1,pady=10,columnspan=2)
-
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-        
-    # Adding To Database
-    def addTo(self):
-        email=self.emailEntry.get()
-        password=self.passwordEntry.get()
-
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Login(StaffEmail,StaffPassword)
-            VALUES(?,?)"""
-        cursor.execute(sql,[(email),(password)])
-        
-        if len(email) > 0 and len(password) > 0 :
-            db.commit()
-            print("\n---------------------------------------------\nNew Login Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Login Commit Failed")
-            Label(self.master,text='Addition Failed  ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        db.close()
-
-class new_vehicle():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Vehicle")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-        Button(self.master,text='Find',command=self.find_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').grid(row=5,column=6,padx=10)
-
-    
-    # New Customer Label
-        Label(self.master,text='MOT',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Mileage',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='Seats',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='Make',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
-        Label(self.master,text='StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
-        Label(self.master,text='Find StaffID',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=4,pady=10,padx=10)
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=3,pady=10,padx=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=3,pady=10,padx=10)
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=3,pady=10,padx=10)
-        Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=3,pady=10,padx=10)
-
-    # New Customer Entry
-        self.MOTEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MOTEntry.grid(row=1,column=1,pady=10,columnspan=2)
-        
-        self.MileageEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MileageEntry.grid(row=2,column=1,pady=10,columnspan=2)
-        
-        self.SeatsEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SeatsEntry.grid(row=3,column=1,pady=10,columnspan=2)
-        
-        self.MakeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.MakeEntry.grid(row=4,column=1,pady=10,columnspan=2)
-        
-        self.AvailabilityEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.AvailabilityEntry.grid(row=5,column=1,pady=10,columnspan=2)
-        
-        self.StaffIdEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.StaffIdEntry.grid(row=6,column=1,pady=10,columnspan=2)
-        
-        self.ForenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.ForenameEntry.grid(row=2,column=4,pady=10,columnspan=2)
-        
-        self.SurnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.SurnameEntry.grid(row=3,column=4,pady=10,columnspan=2)
-        
-        self.EmailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.EmailEntry.grid(row=4,column=4,pady=10,columnspan=2)
-        
-        self.PostcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.PostcodeEntry.grid(row=5,column=4,pady=10,columnspan=2)
-        
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-    
-    
-    # Adding To Database
-    def addTo(self):
-        MOT=self.MOTEntry.get()
-        mileage=self.MileageEntry.get()
-        seats=self.SeatsEntry.get()
-        make=self.MakeEntry.get()
-        availability=self.AvailabilityEntry.get()
-        staff=self.StaffIdEntry.get()
-        staff=self.staff_auto.get()
-        if staff==0:
-            print(staff)
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Vehicle(MOT,Mileage,Seats,Make,Availability,StaffID)
-            VALUES(?,?,?,?,?,?)"""
-        cursor.execute(sql,[(MOT),(mileage),(seats),(make),(availability),(staff)])
-        
-        if len(MOT) > 0 and len(mileage) > 0 and len(seats) > 0 and len(make) > 0 and len(availability) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Vehicle Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Vehicle Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        db.close()
-
-    def find_staff(self):
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        
-        Forename=self.ForenameEntry.get()
-        Surname=self.SurnameEntry.get()
-        Email=self.EmailEntry.get()
-        Postcode=self.PostcodeEntry.get()
-        
-        if len(Forename) >=  1 :
-            sql = """SELECT StaffID FROM Staff WHERE Forename LIKE ?"""
-            cursor.execute(sql,[(Forename)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
-        elif len(Surname) >= 1:
-            sql = """SELECT StaffID FROM Staff WHERE Surname LIKE ?"""
-            cursor.execute(sql,[(Surname)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
-        elif len(Email) >=  1 :
-            sql = """SELECT StaffID FROM Staff WHERE Email LIKE ?"""
-            cursor.execute(sql,[(Email)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
-        elif len(Postcode) >= 1:
-            sql = """SELECT StaffID FROM Staff WHERE Postcode LIKE ?"""
-            cursor.execute(sql,[(Postcode)])
-            result=cursor.fetchall()
-            if result:
-                l=Label(self.master,text='Staff Found',bg='turquoise3',font='Bembo',fg='red').grid(row=6,column=3,padx=9)
-
-            #################
-            # Turn To DropBox
-        print(result)
-        Label(self.master,text=result,bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=4,padx=10)
-            ###############################
-            
-        staff_auto=result
-        db.close()
-
-class new_staff():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Add New Staff")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Add',command=self.addTo,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=3)
-    
-    # New Customer Label
-        Label(self.master,text='Forename',bg='turquoise3',font='Bembo',fg='black').grid(row=1,column=0,pady=10)
-        Label(self.master,text='Surname',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
-        Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0,pady=10)
-        Label(self.master,text='Mobile Number',bg='turquoise3',font='Bembo',fg='black').grid(row=4,column=0,pady=10)
-        Label(self.master,text='Capabilities',bg='turquoise3',font='Bembo',fg='black').grid(row=5,column=0,pady=10)
-        Label(self.master,text='Availability',bg='turquoise3',font='Bembo',fg='black').grid(row=6,column=0,pady=10)
-        Label(self.master,text='Street Number',bg='turquoise3',font='Bembo',fg='black').grid(row=7,column=0,pady=10)
-        Label(self.master,text='Street Name',bg='turquoise3',font='Bembo',fg='black').grid(row=8,column=0,pady=10)
-        Label(self.master,text='Town',bg='turquoise3',font='Bembo',fg='black').grid(row=9,column=0,pady=10)
-        Label(self.master,text='Postcode',bg='turquoise3',font='Bembo',fg='black').grid(row=10,column=0,pady=10)
-
-    # New Customer Entry
-        self.forenameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.forenameEntry.grid(row=1,column=1,pady=10,columnspan=2)
-        
-        self.surnameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.surnameEntry.grid(row=2,column=1,pady=10,columnspan=2)
-        
-        self.EmailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.EmailEntry.grid(row=3,column=1,pady=10,columnspan=2)
-        
-        self.mobileEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.mobileEntry.grid(row=4,column=1,pady=10,columnspan=2)
-        
-        self.CapabilitiesEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.CapabilitiesEntry.grid(row=5,column=1,pady=10,columnspan=2)
-        
-        self.AvailabilityEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.AvailabilityEntry.grid(row=6,column=1,pady=10,columnspan=2)
-        
-        self.streetNumEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.streetNumEntry.grid(row=7,column=1,pady=10,columnspan=2)
-        
-        self.streetNameEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.streetNameEntry.grid(row=8,column=1,pady=10,columnspan=2)
-        
-        self.townEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.townEntry.grid(row=9,column=1,pady=10,columnspan=2)
-        
-        self.postcodeEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
-        self.postcodeEntry.grid(row=10,column=1,pady=10,columnspan=2)
-
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[(ct)])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=addWindow(root2)
-        
-    # Adding To Database
-    def addTo(self):
-        forename=self.forenameEntry.get()
-        surname=self.surnameEntry.get()
-        email=self.EmailEntry.get()
-        capability=self.CapabilitiesEntry.get()
-        availability=self.AvailabilityEntry.get()
-        mobile=self.mobileEntry.get()
-        streetNum=self.streetNumEntry.get()
-        streetName=self.streetNameEntry.get()
-        town=self.townEntry.get()
-        postcode=self.postcodeEntry.get()
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        sql = """INSERT INTO Staff(Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
-            VALUES(?,?,?,?,?,?,?,?,?,?)"""
-        cursor.execute(sql,[(forename),(surname),(email),(mobile),(capability),(availability),(streetNum),(streetName),(town),(postcode)])
-        
-        if len(forename) > 0 and len(surname) > 0 and len(email) > 0 and len(mobile) > 0 and len(streetNum) > 0 and len(streetName) > 0 and len(town) > 0 and len(postcode) > 0:
-            db.commit()
-            print("\n---------------------------------------------\nNew Staff Committed")
-            Label(self.master,text='Addition Added  ',bg='turquoise3',font='Bembo',fg='green').grid(row=1,column=3)
-        else:
-            print("\n---------------------------------------------\n~~New Staff Commit Failed")
-            Label(self.master,text='Addition Failed ',bg='turquoise3',font='Bembo',fg='red').grid(row=1,column=3)
-        db.close()
-
-#################tree
+#################
 class showWindow():
     def __init__(self, master):
         self.master = master
@@ -1386,7 +588,7 @@ class showWindow():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=display_logs(root2)
-        
+
 class display_customer():
     def __init__(self, master):
         self.master = master
@@ -1399,80 +601,113 @@ class display_customer():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
+        # Initialising Strings
         q=StringVar()
-        t1 = StringVar() 
-        t2 = StringVar()
-        t3 = StringVar()
-        t4 = StringVar()
-        
-        # # New_Customer Window Buttons
+        tcustid = StringVar() 
+        tfname = StringVar()
+        tsname = StringVar()
+        temail = StringVar()
+        tnum = StringVar()
+
+        # Button
         Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
-        #grid(row=0,column=0)
-        # Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        # Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
+
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
 
+        # Reloads the Database
         def update(rows):
             trv.delete(*trv.get_children())
             for i in rows:
                 trv.insert('', 'end', values=i)
         
+        # Finds Row using SQL
         def search():
             q2 = q.get()
-            query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer WHERE Forename LIKE '%"+q2+"' OR Surname LIKE '%"+q2+"'"
-            cursor.execute(query)
+            sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer WHERE Forename LIKE '%"+q2+"' OR Surname LIKE '%"+q2+"'"
+            cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
+            
+        # Removes Search
         def clear():
-            query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer"
-            cursor.execute(query)
+            sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer"
+            cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
+        
+        # Double Click Auto Imports Data Into Entry
         def getrow(event):
             rowid = trv.identify_row(event.y)
             item = trv.item(trv.focus())
-            t1.set(item['values'][0])
-            t2.set(item['values'][1])
-            t3.set(item['values'][2])
-            t4.set(item['values'][3])
+            tcustid.set(item['values'][0])
+            tfname.set(item['values'][1])
+            tsname.set(item['values'][2])
+            temail.set(item['values'][3])
+            tnum.set(item['values'][4])
+
+        # Change an existing entry
         def update_customer():
-            return True
+            custid = tcustid.get()
+            fname = tfname.get()
+            lname = tsname.get()
+            email = temail.get()
+            num= tnum.get()
+            
+            # Confirmation Box
+            if messagebox.askyesno("Confirmation","Are you sure you want to update this customer?"):
+                sql = "UPDATE Customer SET Forename = ?, Surname = ?, Email = ?,  MobileNum = ? WHERE CustomerID = ?"
+                cursor.execute(sql,(fname,lname,email,num,custid))
+                db.commit()
+                clear()
+        
+        # Adds New Entry
         def add_new():
-            return True
+            fname = tfname.get()
+            lname = tsname.get()
+            num= tnum.get()
+            email = temail.get()
+            sql = """INSERT into Customer(Forename,Surname,Email,MobileNum)
+                    VALUES(?,?,?,?)"""
+            cursor.execute(sql,((fname),(lname),(email),(num)))
+            db.commit()
+            clear()
+            
+        # Deletes Entry
         def delete_customer():
-            customer_id = t1.get()
+            customer_id = tcustid.get()
             if messagebox.askyesno("Confirmation","Are you sure you want to delete this customer?"):
-                query = "DELETE FROM Customer WHERE CustomerID = "+customer_id
-                cursor.execute(query)
+                sql = "DELETE FROM Customer WHERE CustomerID = "+customer_id
+                cursor.execute(sql)
+                db.commit()
                 clear()
             else:
                 return True
             
-        wrapper1 = LabelFrame(master, text="Customer List")
-        wrapper2 = LabelFrame(master, text="Search")
-        wrapper3 = LabelFrame(master, text="Customer Data")
+        wrapper1 = LabelFrame(master, text="Customer List",bg='turquoise3')
+        wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+        wrapper3 = LabelFrame(master, text="Customer Data",bg='turquoise3')
         wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
         wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
         wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
         
-        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), show="headings", height="6")
+        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5), show="headings", height="6")
         trv.pack(fill="both", expand="yes",padx=20,pady=10)
         trv.heading(1, text="CustomerID")
         trv.heading(2, text="Firstname")
         trv.heading(3, text="Lastname")
-        trv.heading(4, text="Num")
+        trv.heading(4, text="Email")
+        trv.heading(5, text="Num")
         
         trv.bind('<Double 1>', getrow)
         
-        query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer"
-        cursor.execute(query)
+        sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer"
+        cursor.execute(sql)
         rows = cursor.fetchall()
         update(rows)
         
         #search section
-        SearchLabel = Label(wrapper2, text="Search")
+        SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
         SearchLabel.pack(side=tk.LEFT, padx=10)
         SearchEntry = Entry(wrapper2, textvariable=q)
         SearchEntry.pack(side=tk.LEFT, padx=6)
@@ -1482,53 +717,39 @@ class display_customer():
         ClearButton.pack(side=tk.LEFT, padx=6)
         
         #User Data section
-        lbl1 = Label(wrapper3, text="Customer ID")
-        lbl1.grid(row=0, column=0, padx=5, pady=3)
-        ent1 = Entry(wrapper3, textvariable=t1)
-        ent1.grid(row=0, column=1, padx=5, pady=3)
+        IDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3')
+        IDLabel.grid(row=0, column=0, padx=5, pady=3)
+        IDEntry = Entry(wrapper3, textvariable=tcustid)
+        IDEntry.grid(row=0, column=1, padx=5, pady=3)
         
-        lbl2 = Label(wrapper3, text="Forename")
-        lbl2.grid(row=1, column=0, padx=5, pady=3)
-        ent2 = Entry(wrapper3, textvariable=t2)
-        ent2.grid(row=1, column=1, padx=5, pady=3)
+        ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+        ForenameLabel.grid(row=1, column=0, padx=5, pady=3)
+        ForenameEntry = Entry(wrapper3, textvariable=tfname)
+        ForenameEntry.grid(row=1, column=1, padx=5, pady=3)
         
-        lbl3 = Label(wrapper3, text="Surname")
-        lbl3.grid(row=2, column=0, padx=5, pady=3)
-        ent3 = Entry(wrapper3, textvariable=t3)
-        ent3.grid(row=2, column=1, padx=5, pady=3)
+        SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
+        SurnameLabel.grid(row=2, column=0, padx=5, pady=3)
+        SurnameEntry = Entry(wrapper3, textvariable=tsname)
+        SurnameEntry.grid(row=2, column=1, padx=5, pady=3)
         
-        lbl4 = Label(wrapper3, text="Mobile Number")
-        lbl4.grid(row=3, column=0, padx=5, pady=3)
-        ent4 = Entry(wrapper3, textvariable=t4)
-        ent4.grid(row=3, column=1, padx=5, pady=3)
+        EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
+        EmailLabel.grid(row=3, column=0, padx=5, pady=3)
+        EmailEntry = Entry(wrapper3, textvariable=temail)
+        EmailEntry.grid(row=3, column=1, padx=5, pady=3)
         
-        up_btn = Button(wrapper3, text="Update", command=update_customer)
-        add_btn = Button(wrapper3, text="Add New", command=add_new)
-        delete_btn = Button(wrapper3, text="Delete", command=delete_customer)
+        NumLabel = Label(wrapper3, text="Mobile Number",bg='turquoise3')
+        NumLabel.grid(row=4, column=0, padx=5, pady=3)
+        NumEntry = Entry(wrapper3, textvariable=tnum)
+        NumEntry.grid(row=4, column=1, padx=5, pady=3)
         
-        up_btn.grid(row=4, column=1,padx=5,pady=3)
-        add_btn.grid(row=4, column=0,padx=5,pady=3)
-        delete_btn.grid(row=4, column=2,padx=5,pady=3)
+        # Buttons
+        UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+        AddButton = Button(wrapper3, text="Add New", command=add_new)
+        DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+        UpdateButton.grid(row=5, column=1,padx=5,pady=3)
+        AddButton.grid(row=5, column=0,padx=5,pady=3)
+        DeleteButton.grid(row=5, column=2,padx=5,pady=3)
         
-        
-        
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
     
     # Return To 'Menu' Screen
     def back(self):
@@ -1536,7 +757,6 @@ class display_customer():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=showWindow(root2)
-    
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1546,8 +766,6 @@ class display_customer():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"    
-    
-    
 class display_booking():
     def __init__(self, master):
         self.master = master
@@ -1560,29 +778,171 @@ class display_booking():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
+        # Initialising Strings
+        q=StringVar()
+        tcid = StringVar() 
+        tfname = StringVar()
+        tsname = StringVar()
+        temail = StringVar()
+        tnum = StringVar()
+        tcustid = StringVar() 
+        tfname = StringVar()
+        tsname = StringVar()
+        temail = StringVar()
+        tnum = StringVar()
+        tcustid = StringVar() 
+        tfname = StringVar()
+        tsname = StringVar()
         
+
+        # Button
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
+
+        # Reloads the Database
+        def update(rows):
+            trv.delete(*trv.get_children())
+            for i in rows:
+                trv.insert('', 'end', values=i)
+        
+        # Finds Row using SQL
+        def search():
+            q2 = q.get()
+            sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer WHERE Forename LIKE '%"+q2+"' OR Surname LIKE '%"+q2+"'"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            
+        # Removes Search
+        def clear():
+            sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+        
+        # Double Click Auto Imports Data Into Entry
+        def getrow(event):
+            rowid = trv.identify_row(event.y)
+            item = trv.item(trv.focus())
+            tcustid.set(item['values'][0])
+            tfname.set(item['values'][1])
+            tsname.set(item['values'][2])
+            temail.set(item['values'][3])
+            tnum.set(item['values'][4])
+
+        # Change an existing entry
+        def update_customer():
+            custid = tcustid.get()
+            fname = tfname.get()
+            lname = tsname.get()
+            email = temail.get()
+            num= tnum.get()
+            
+            # Confirmation Box
+            if messagebox.askyesno("Confirmation","Are you sure you want to update this customer?"):
+                sql = "UPDATE Customer SET Forename = ?, Surname = ?, Email = ?,  MobileNum = ? WHERE CustomerID = ?"
+                cursor.execute(sql,(fname,lname,email,num,custid))
+                db.commit()
+                clear()
+        
+        # Adds New Entry
+        def add_new():
+            fname = tfname.get()
+            lname = tsname.get()
+            num= tnum.get()
+            email = temail.get()
+            sql = """INSERT into Customer(Forename,Surname,Email,MobileNum)
+                    VALUES(?,?,?,?)"""
+            cursor.execute(sql,((fname),(lname),(email),(num)))
+            db.commit()
+            clear()
+            
+        # Deletes Entry
+        def delete_customer():
+            customer_id = tcustid.get()
+            if messagebox.askyesno("Confirmation","Are you sure you want to delete this customer?"):
+                sql = "DELETE FROM Customer WHERE CustomerID = "+customer_id
+                cursor.execute(sql)
+                db.commit()
+                clear()
+            else:
+                return True
+            
+        wrapper1 = LabelFrame(master, text="Customer List",bg='turquoise3')
+        wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+        wrapper3 = LabelFrame(master, text="Customer Data",bg='turquoise3')
+        wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+        wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+        wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+        
+        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5), show="headings", height="6")
+        trv.pack(fill="both", expand="yes",padx=20,pady=10)
+        trv.heading(1, text="CustomerID")
+        trv.heading(2, text="Firstname")
+        trv.heading(3, text="Lastname")
+        trv.heading(4, text="Email")
+        trv.heading(5, text="Num")
+        
+        trv.bind('<Double 1>', getrow)
+        
+        sql = "SELECT CustomerID,Forename,Surname,Email,MobileNum FROM Customer"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        update(rows)
+        
+        #search section
+        SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+        SearchLabel.pack(side=tk.LEFT, padx=10)
+        SearchEntry = Entry(wrapper2, textvariable=q)
+        SearchEntry.pack(side=tk.LEFT, padx=6)
+        SearchButton = Button(wrapper2, text="Search",command=search)
+        SearchButton.pack(side=tk.LEFT, padx=6)
+        ClearButton = Button(wrapper2, text="Clear",command=clear)
+        ClearButton.pack(side=tk.LEFT, padx=6)
+        
+        #User Data section
+        IDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3')
+        IDLabel.grid(row=0, column=0, padx=5, pady=3)
+        IDEntry = Entry(wrapper3, textvariable=tcustid)
+        IDEntry.grid(row=0, column=1, padx=5, pady=3)
+        
+        ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+        ForenameLabel.grid(row=1, column=0, padx=5, pady=3)
+        ForenameEntry = Entry(wrapper3, textvariable=tfname)
+        ForenameEntry.grid(row=1, column=1, padx=5, pady=3)
+        
+        SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
+        SurnameLabel.grid(row=2, column=0, padx=5, pady=3)
+        SurnameEntry = Entry(wrapper3, textvariable=tsname)
+        SurnameEntry.grid(row=2, column=1, padx=5, pady=3)
+        
+        EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
+        EmailLabel.grid(row=3, column=0, padx=5, pady=3)
+        EmailEntry = Entry(wrapper3, textvariable=temail)
+        EmailEntry.grid(row=3, column=1, padx=5, pady=3)
+        
+        NumLabel = Label(wrapper3, text="Mobile Number",bg='turquoise3')
+        NumLabel.grid(row=4, column=0, padx=5, pady=3)
+        NumEntry = Entry(wrapper3, textvariable=tnum)
+        NumEntry.grid(row=4, column=1, padx=5, pady=3)
+        
+        # Buttons
+        UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+        AddButton = Button(wrapper3, text="Add New", command=add_new)
+        DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+        UpdateButton.grid(row=5, column=1,padx=5,pady=3)
+        AddButton.grid(row=5, column=0,padx=5,pady=3)
+        DeleteButton.grid(row=5, column=2,padx=5,pady=3)
+        
     
+    # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1592,13 +952,6 @@ class display_booking():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
 class display_login():
     def __init__(self, master):
         self.master = master
