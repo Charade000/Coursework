@@ -1,8 +1,15 @@
 from string import printable
 from tkinter import *
+
+import tkinter as tk
 from tkinter import ttk
 import sqlite3
 from time import time,ctime,sleep
+import re
+
+from tkinter import messagebox
+import mysql.connector
+
 
 class Home():
     def __init__(self, master):
@@ -1307,13 +1314,6 @@ class showWindow():
         Button(self.master,text='Show Vehicle',command=self.show_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
         Button(self.master,text='Show Staff',command=self.show_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
         Button(self.master,text='Show Logs',command=self.show_logs,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
-        
-        Button(self.master,text='Update Customer',command=self.update_customer,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=0)
-        Button(self.master,text='Update Login',command=self.update_login,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=1)
-        Button(self.master,text='Update Booking',command=self.update_booking,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=2)
-        Button(self.master,text='Update Vehicle',command=self.update_vehicle,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=3)
-        Button(self.master,text='Update Staff',command=self.update_staff,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=4)
-        Button(self.master,text='Update Logs',command=self.update_logs,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=2,column=5)
 
 
     # Quit Program
@@ -1387,42 +1387,6 @@ class showWindow():
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=display_logs(root2)
         
-    def update_customer(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_customer(root2)
-    
-    def update_login(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_login(root2)
-    
-    def update_booking(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_booking(root2)
-    
-    def update_vehicle(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_vehicle(root2)
-    
-    def update_staff(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_staff(root2)
-        
-    def update_logs(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=change_logs(root2)
-
 class display_customer():
     def __init__(self, master):
         self.master = master
@@ -1435,11 +1399,119 @@ class display_customer():
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+        q=StringVar()
+        t1 = StringVar() 
+        t2 = StringVar()
+        t3 = StringVar()
+        t4 = StringVar()
+        
+        # # New_Customer Window Buttons
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+        #grid(row=0,column=0)
+        # Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        # Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
     
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+
+        def update(rows):
+            trv.delete(*trv.get_children())
+            for i in rows:
+                trv.insert('', 'end', values=i)
+        
+        def search():
+            q2 = q.get()
+            query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer WHERE Forename LIKE '%"+q2+"' OR Surname LIKE '%"+q2+"'"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            update(rows)
+        def clear():
+            query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            update(rows)
+        def getrow(event):
+            rowid = trv.identify_row(event.y)
+            item = trv.item(trv.focus())
+            t1.set(item['values'][0])
+            t2.set(item['values'][1])
+            t3.set(item['values'][2])
+            t4.set(item['values'][3])
+        def update_customer():
+            return True
+        def add_new():
+            return True
+        def delete_customer():
+            customer_id = t1.get()
+            if messagebox.askyesno("Confirmation","Are you sure you want to delete this customer?"):
+                query = "DELETE FROM Customer WHERE CustomerID = "+customer_id
+                cursor.execute(query)
+                clear()
+            else:
+                return True
+            
+        wrapper1 = LabelFrame(master, text="Customer List")
+        wrapper2 = LabelFrame(master, text="Search")
+        wrapper3 = LabelFrame(master, text="Customer Data")
+        wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+        wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+        wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+        
+        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), show="headings", height="6")
+        trv.pack(fill="both", expand="yes",padx=20,pady=10)
+        trv.heading(1, text="CustomerID")
+        trv.heading(2, text="Firstname")
+        trv.heading(3, text="Lastname")
+        trv.heading(4, text="Num")
+        
+        trv.bind('<Double 1>', getrow)
+        
+        query = "SELECT CustomerID,Forename,Surname,MobileNum FROM Customer"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        update(rows)
+        
+        #search section
+        SearchLabel = Label(wrapper2, text="Search")
+        SearchLabel.pack(side=tk.LEFT, padx=10)
+        SearchEntry = Entry(wrapper2, textvariable=q)
+        SearchEntry.pack(side=tk.LEFT, padx=6)
+        SearchButton = Button(wrapper2, text="Search",command=search)
+        SearchButton.pack(side=tk.LEFT, padx=6)
+        ClearButton = Button(wrapper2, text="Clear",command=clear)
+        ClearButton.pack(side=tk.LEFT, padx=6)
+        
+        #User Data section
+        lbl1 = Label(wrapper3, text="Customer ID")
+        lbl1.grid(row=0, column=0, padx=5, pady=3)
+        ent1 = Entry(wrapper3, textvariable=t1)
+        ent1.grid(row=0, column=1, padx=5, pady=3)
+        
+        lbl2 = Label(wrapper3, text="Forename")
+        lbl2.grid(row=1, column=0, padx=5, pady=3)
+        ent2 = Entry(wrapper3, textvariable=t2)
+        ent2.grid(row=1, column=1, padx=5, pady=3)
+        
+        lbl3 = Label(wrapper3, text="Surname")
+        lbl3.grid(row=2, column=0, padx=5, pady=3)
+        ent3 = Entry(wrapper3, textvariable=t3)
+        ent3.grid(row=2, column=1, padx=5, pady=3)
+        
+        lbl4 = Label(wrapper3, text="Mobile Number")
+        lbl4.grid(row=3, column=0, padx=5, pady=3)
+        ent4 = Entry(wrapper3, textvariable=t4)
+        ent4.grid(row=3, column=1, padx=5, pady=3)
+        
+        up_btn = Button(wrapper3, text="Update", command=update_customer)
+        add_btn = Button(wrapper3, text="Add New", command=add_new)
+        delete_btn = Button(wrapper3, text="Delete", command=delete_customer)
+        
+        up_btn.grid(row=4, column=1,padx=5,pady=3)
+        add_btn.grid(row=4, column=0,padx=5,pady=3)
+        delete_btn.grid(row=4, column=2,padx=5,pady=3)
+        
+        
+        
     # Quit Program
     def end(self):
         t = time()
@@ -1458,6 +1530,13 @@ class display_customer():
         db.close()
         quit()
     
+    # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
+    
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1468,12 +1547,7 @@ class display_customer():
         self.master.attributes("-fullscreen", False)
         return "break"    
     
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+    
 class display_booking():
     def __init__(self, master):
         self.master = master
@@ -1682,314 +1756,6 @@ class display_logs():
     def __init__(self, master):
         self.master = master
         self.master.title("Display Logs")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-
-
-class change_customer():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Customer")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-class change_booking():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Booking")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-class change_login():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Login")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-class change_vehicle():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Vehicle")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-class change_staff():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Staff")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
-class change_logs():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Update Logs")
         self.master.configure(background='turquoise3')
         
         # Binding F11 and ESCAPE keys to full screen
