@@ -35,8 +35,7 @@ Vehichle and customer have hit the list issue
 vehicle cant read adv
 tree view to update and show
 
-regular expressions
-
+like///
 
 https://app.creately.com/diagram/hECxhkHIUKm/edit
 erd
@@ -51,3 +50,14 @@ interview
 6)email not automated manual    everything more automated   monthly cost
 Has not got a database needs to be combined    easier to manage   need a unified system   filetr by place    separate bookings
 website
+
+
+
+
+
+Things to add to 
+paramatized sqlite
+aggregate sql max min
+regular expressions
+inheritance ( for full screen, copies over function)
+data structure
