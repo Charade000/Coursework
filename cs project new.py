@@ -1,3 +1,4 @@
+from fileinput import close
 from string import printable
 from tkinter import *
 
@@ -167,7 +168,7 @@ class Home():
                 print("Bookings Table Created")
                 # Adding Fake Data For Testing
                 sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
-                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy","")"""
+                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy","ghj")"""
                 cursor.execute(sql)
                 
                 db.commit()
@@ -383,6 +384,7 @@ class MasterLogin():
                 VALUES(?,?,?)"""
             cursor.execute(sql,[(email),(ct),('NULL')])
             db.commit()
+            db.close()
             self.menu()
         else:
             print("Login Failed")
@@ -397,20 +399,6 @@ class MasterLogin():
         muGUI=MasterMenu(root2)
     
     def tempbypass(self):
-        email=self.emailEntry.get()
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + email + " has logged in")
-        print("--------------------------------")
-        sql = """INSERT INTO Time(Email,LogIn,LogOut)
-            VALUES(?,?,?)"""
-        cursor.execute(sql,[(email),(ct),('NULL')])
-        db.commit()
-        db.close()
         
         self.master.withdraw()
         root2=Toplevel(self.master)
@@ -480,11 +468,11 @@ class MasterMenu():
         cursor.execute(sql,[(ct)])
         db.commit()
         
+        db.close()
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=MasterLogin(root2)
-        db.close()
         
     def show_data(self):
         self.master.withdraw()
@@ -766,7 +754,7 @@ class display_customer():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"    
-class display_booking():
+class display_booking(): 
     def __init__(self, master):
             self.master = master
             self.master.title("Display Booking")
@@ -794,38 +782,48 @@ class display_booking():
             tforename = StringVar()
             tdriver = StringVar()
             
-
             # Button
             Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
 
-            db =sqlite3.connect("main.db")
-            cursor = db.cursor()
+            # db =sqlite3.connect("main.db")
+            # cursor = db.cursor()
 
             # Reloads the Database
             def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 trv.delete(*trv.get_children())
                 for i in rows:
                     trv.insert('', 'end', values=i)
+                db.close()
             
             # Finds Row using SQL
             def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 q2 = q.get()
                 sql = "SELECT CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+" OR BookingsID LIKE '%"+q2+"''"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
+                db.close()
                 
             # Removes Search
             def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 sql = "SELECT CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
+                db.close()
             
             # Double Click Auto Imports Data Into Entry
             def getrow(event):
                 rowid = trv.identify_row(event.y)
+                
                 item = trv.item(trv.focus())
+                print(item)
                 tbookingid.set(item['values'][0])
                 tcustid.set(item['values'][1])
                 tstartstreetnum.set(item['values'][2])
@@ -842,6 +840,8 @@ class display_booking():
 
             # Change an existing entry
             def update_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 bookingid = tbookingid.get()
                 customerid = tcustid.get()
                 startstreetnum = tstartstreetnum.get()
@@ -856,15 +856,21 @@ class display_booking():
                 forename = tforename.get()
                 driver = tdriver.get()
                 
+
                 # Confirmation Box
                 if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
-                    sql = "UPDATE Bookings SET BookingsID = ? , CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinatinationStreet = ? , DestinationPostcode = ? , Fufilled = ? , Driver = ?"
-                    cursor.execute(sql,(bookingid,customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver,))
+                    sql = "UPDATE Bookings SET BookingsID = ? , CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, Driver = ?"
+                    cursor.execute(sql,(bookingid,customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver))
+
                     db.commit()
                     clear()
+                    db.close()
+                db.close()
             
             # Adds New Entry
             def add_new():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 bookingid = tbookingid.get()
                 customerid = tcustid.get()
                 startstreetnum = tstartstreetnum.get()
@@ -878,22 +884,27 @@ class display_booking():
                 time = ttime.get()
                 forename = tforename.get()
                 driver = tdriver.get()
-                sql = """INSERT into Bookings (BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinatinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
+                sql = """INSERT into Bookings (BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"""
                 cursor.execute(sql,((bookingid),(customerid),(startstreetnum),(startstreet),(startpost),(deststreetnum),(deststreet),(destpost),(fufilled),(date),(time),(forename),(driver)))
                     
                 db.commit()
+                db.close()
                 clear()
                 
             # Deletes Entry
             def delete_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
                 bookingid = tbookingid.get()
                 if messagebox.askyesno("Confirmation","Are you sure you want to delete this Booking?"):
-                    sql = "DELETE FROM Bookings WHERE BookingID = "+bookingid
+                    sql = "DELETE FROM Bookings WHERE BookingsID = "+bookingid
                     cursor.execute(sql)
                     db.commit()
+                    db.close()
                     clear()
                 else:
+                    db.close()
                     return True
                 
             wrapper1 = LabelFrame(master, text="Bookings List",bg='turquoise3')
@@ -902,6 +913,7 @@ class display_booking():
             wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+            
             
             trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
@@ -922,10 +934,14 @@ class display_booking():
             
             trv.bind('<Double 1>', getrow)
             
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
             sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
             cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
+            db.close()
             
             #search section
             SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
@@ -938,70 +954,70 @@ class display_booking():
             ClearButton.pack(side=tk.LEFT, padx=6)
             
             #User Data section
-            IDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3') ############////////////////''
-            IDLabel.grid(row=0, column=0, padx=5, pady=3)
-            IDEntry = Entry(wrapper3, textvariable=tbookingid)
-            IDEntry.grid(row=0, column=1, padx=5, pady=3)
+            BookIDLabel = Label(wrapper3, text="Booking ID",bg='turquoise3') ############////////////////''
+            BookIDLabel.grid(row=0, column=0, padx=5, pady=3)
+            BookIDEntry = Entry(wrapper3, textvariable=tbookingid)
+            BookIDEntry.grid(row=0, column=1, padx=5, pady=3)
             
-            ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
-            ForenameLabel.grid(row=1, column=0, padx=5, pady=3)
-            ForenameEntry = Entry(wrapper3, textvariable=tcustid)
-            ForenameEntry.grid(row=1, column=1, padx=5, pady=3)
+            CustIDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3')
+            CustIDLabel.grid(row=1, column=0, padx=5, pady=3)
+            CustIDEntry = Entry(wrapper3, textvariable=tcustid)
+            CustIDEntry.grid(row=1, column=1, padx=5, pady=3)
             
-            SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
-            SurnameLabel.grid(row=2, column=0, padx=5, pady=3)
-            SurnameEntry = Entry(wrapper3, textvariable=tstartstreetnum)
-            SurnameEntry.grid(row=2, column=1, padx=5, pady=3)
+            startstreetnumLabel = Label(wrapper3, text="Start Street Num",bg='turquoise3')
+            startstreetnumLabel.grid(row=2, column=0, padx=5, pady=3)
+            startstreetnumEntry = Entry(wrapper3, textvariable=tstartstreetnum)
+            startstreetnumEntry.grid(row=2, column=1, padx=5, pady=3)
             
-            EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
-            EmailLabel.grid(row=3, column=0, padx=5, pady=3)
-            EmailEntry = Entry(wrapper3, textvariable=tstartstreet)
-            EmailEntry.grid(row=3, column=1, padx=5, pady=3)
+            startstreetLabel = Label(wrapper3, text="Start Street",bg='turquoise3')
+            startstreetLabel.grid(row=3, column=0, padx=5, pady=3)
+            startstreetEntry = Entry(wrapper3, textvariable=tstartstreet)
+            startstreetEntry.grid(row=3, column=1, padx=5, pady=3)
             
-            NumLabel = Label(wrapper3, text="Mobile Number",bg='turquoise3')
-            NumLabel.grid(row=4, column=0, padx=5, pady=3)
-            NumEntry = Entry(wrapper3, textvariable=tstartpost)
-            NumEntry.grid(row=4, column=1, padx=5, pady=3)
+            startpostLabel = Label(wrapper3, text="Start Postcode",bg='turquoise3')
+            startpostLabel.grid(row=4, column=0, padx=5, pady=3)
+            startpostEntry = Entry(wrapper3, textvariable=tstartpost)
+            startpostEntry.grid(row=4, column=1, padx=5, pady=3)
             
-            IDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3')
-            IDLabel.grid(row=5, column=0, padx=5, pady=3)
-            IDEntry = Entry(wrapper3, textvariable=tbookingid)
-            IDEntry.grid(row=5, column=1, padx=5, pady=3)
+            deststreetnumLabel = Label(wrapper3, text="Dest Street Num",bg='turquoise3')
+            deststreetnumLabel.grid(row=5, column=0, padx=5, pady=3)
+            deststreetnumEntry = Entry(wrapper3, textvariable=tdeststreetnum)
+            deststreetnumEntry.grid(row=5, column=1, padx=5, pady=3)
             
-            ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
-            ForenameLabel.grid(row=6, column=0, padx=5, pady=3)
-            ForenameEntry = Entry(wrapper3, textvariable=tcustid)
-            ForenameEntry.grid(row=6, column=1, padx=5, pady=3)
+            DestStreetLabel = Label(wrapper3, text="Dest Street",bg='turquoise3')
+            DestStreetLabel.grid(row=6, column=0, padx=5, pady=3)
+            DestStreetEntry = Entry(wrapper3, textvariable=tdeststreet)
+            DestStreetEntry.grid(row=6, column=1, padx=5, pady=3)
             
-            SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
-            SurnameLabel.grid(row=7, column=0, padx=5, pady=3)
-            SurnameEntry = Entry(wrapper3, textvariable=tstartstreetnum)
-            SurnameEntry.grid(row=7, column=1, padx=5, pady=3)
+            destpostLabel = Label(wrapper3, text="Dest Postcode",bg='turquoise3')
+            destpostLabel.grid(row=7, column=0, padx=5, pady=3)
+            destpostEntry = Entry(wrapper3, textvariable=tdestpost)
+            destpostEntry.grid(row=7, column=1, padx=5, pady=3)
             
-            EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
-            EmailLabel.grid(row=8, column=0, padx=5, pady=3)
-            EmailEntry = Entry(wrapper3, textvariable=tstartstreet)
-            EmailEntry.grid(row=8, column=1, padx=5, pady=3)
+            fufilledLabel = Label(wrapper3, text="Fufilled",bg='turquoise3')
+            fufilledLabel.grid(row=8, column=0, padx=5, pady=3)
+            fufilledEntry = Entry(wrapper3, textvariable=tfufilled)
+            fufilledEntry.grid(row=8, column=1, padx=5, pady=3)
             
-            NumLabel = Label(wrapper3, text="Mobile Number",bg='turquoise3')
-            NumLabel.grid(row=9, column=0, padx=5, pady=3)
-            NumEntry = Entry(wrapper3, textvariable=tstartpost)
-            NumEntry.grid(row=9, column=1, padx=5, pady=3)
+            dateLabel = Label(wrapper3, text="Date",bg='turquoise3')
+            dateLabel.grid(row=9, column=0, padx=5, pady=3)
+            dateEntry = Entry(wrapper3, textvariable=tdate)
+            dateEntry.grid(row=9, column=1, padx=5, pady=3)
             
-            SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
-            SurnameLabel.grid(row=10, column=0, padx=5, pady=3)
-            SurnameEntry = Entry(wrapper3, textvariable=tstartstreetnum)
-            SurnameEntry.grid(row=10, column=1, padx=5, pady=3)
+            timeLabel = Label(wrapper3, text="Time",bg='turquoise3')
+            timeLabel.grid(row=10, column=0, padx=5, pady=3)
+            timeEntry = Entry(wrapper3, textvariable=ttime)
+            timeEntry.grid(row=10, column=1, padx=5, pady=3)
             
-            EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
-            EmailLabel.grid(row=11, column=0, padx=5, pady=3)
-            EmailEntry = Entry(wrapper3, textvariable=tstartstreet)
-            EmailEntry.grid(row=11, column=1, padx=5, pady=3)
+            forenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+            forenameLabel.grid(row=11, column=0, padx=5, pady=3)
+            forenameEntry = Entry(wrapper3, textvariable=tforename)
+            forenameEntry.grid(row=11, column=1, padx=5, pady=3)
             
-            NumLabel = Label(wrapper3, text="Mobile Number",bg='turquoise3')
-            NumLabel.grid(row=12, column=0, padx=5, pady=3)
-            NumEntry = Entry(wrapper3, textvariable=tstartpost)
-            NumEntry.grid(row=12, column=1, padx=5, pady=3)
+            driverLabel = Label(wrapper3, text="Driver",bg='turquoise3')
+            driverLabel.grid(row=12, column=0, padx=5, pady=3)
+            driverEntry = Entry(wrapper3, textvariable=tdriver)
+            driverEntry.grid(row=12, column=1, padx=5, pady=3)
             
             # Buttons
             UpdateButton = Button(wrapper3, text="Update", command=update_customer)
@@ -1011,7 +1027,7 @@ class display_booking():
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
             
-        
+            
             # Return To 'Menu' Screen
     def back(self):
         self.master.withdraw()
