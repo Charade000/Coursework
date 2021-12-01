@@ -77,7 +77,6 @@ class Home():
         sql =  "SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(sql)
         names = [row[0] for row in cursor.fetchall()]
-        db.close()
         return names
 
     # Creating Customer Database Or Checking If It Exist
@@ -114,7 +113,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Customers Created~~")
-                db.close()
+                
     
     # Creating Master Login Database Or Checking If It Exist
     def createMasterLoginTable(self,dbName):
@@ -139,7 +138,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Master Logins Created~~")
-                db.close()
+                
 
     
     # Creating Bookings Database Or Checking If It Exist
@@ -173,7 +172,7 @@ class Home():
                 
                 db.commit()
                 print("~~Test Bookings Created~~")
-                db.close()
+                
     
     # Creating Vehicle Database Or Checking If It Exist
     def createVehicleTable(self,dbName):
@@ -203,7 +202,7 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("~~Test Vehicles Created~~")
-                db.close()
+                
     
     # Creating Staff Database Or Checking If It Exist
     def createStaffTable(self,dbName):
@@ -236,11 +235,12 @@ class Home():
                     VALUES("Terry","Johnson","staff@hypothetical.com","079878556408","Taxi","Available",3,"Granby Street","Burnley","BB12 0PP")"""
                 cursor.execute(sql)
                 db.commit()
-                db.close()
+                
 
     # Creating Staff Database Or Checking If It Exist
     def createTimeTable(self,dbName):
         if 'Time' in self.getTables(dbName):
+            
             pass
         else:
             with sqlite3.connect(dbName) as db:
@@ -253,8 +253,8 @@ class Home():
                     """
                 cursor.execute(sql)
                 db.commit()
-                print("---------------------------------------------\Time Table Created")
-                db.close()
+                print("---------------------------------------------\nTime Table Created")
+                
 
 class loginMenu():
     def __init__(self, master):
@@ -802,7 +802,7 @@ class display_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+" OR BookingsID LIKE '%"+q2+"''"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+" OR BookingsID LIKE '%"+q2+"''"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -812,7 +812,7 @@ class display_booking():
             def clear():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -823,7 +823,6 @@ class display_booking():
                 rowid = trv.identify_row(event.y)
                 
                 item = trv.item(trv.focus())
-                print(item)
                 tbookingid.set(item['values'][0])
                 tcustid.set(item['values'][1])
                 tstartstreetnum.set(item['values'][2])
@@ -837,7 +836,7 @@ class display_booking():
                 ttime.set(item['values'][10])
                 tforename.set(item['values'][11])
                 tdriver.set(item['values'][12])
-
+                
             # Change an existing entry
             def update_customer():
                 db =sqlite3.connect("main.db")
@@ -864,7 +863,7 @@ class display_booking():
 
                     db.commit()
                     clear()
-                    db.close()
+                db.commit()
                 db.close()
             
             # Adds New Entry
@@ -884,9 +883,9 @@ class display_booking():
                 time = ttime.get()
                 forename = tforename.get()
                 driver = tdriver.get()
-                sql = """INSERT into Bookings (BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"""
-                cursor.execute(sql,((bookingid),(customerid),(startstreetnum),(startstreet),(startpost),(deststreetnum),(deststreet),(destpost),(fufilled),(date),(time),(forename),(driver)))
+                sql = """INSERT into Bookings (CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
+                cursor.execute(sql,((customerid),(startstreetnum),(startstreet),(startpost),(deststreetnum),(deststreet),(destpost),(fufilled),(date),(time),(forename),(driver)))
                     
                 db.commit()
                 db.close()
@@ -930,7 +929,6 @@ class display_booking():
             trv.heading(11, text="Time")
             trv.heading(12, text="Forename")
             trv.heading(13, text="Driver")
-
             
             trv.bind('<Double 1>', getrow)
             
