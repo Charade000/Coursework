@@ -754,6 +754,57 @@ class display_customer():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"    
+class display_login():
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Display Login")
+        self.master.configure(background='turquoise3')
+        
+        # Binding F11 and ESCAPE keys to full screen
+        self.master.bind("<F11>", self.toggle_fullscreen)
+        self.master.bind("<Escape>", self.end_fullscreen)
+        self.state = True
+        self.master.attributes("-fullscreen", True)
+        
+        # New_Customer Window Buttons
+        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
+        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
+        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
+    
+    # Quit Program
+    def end(self):
+        t = time()
+        ct = ctime(t)
+        
+        db =sqlite3.connect("main.db")
+        cursor = db.cursor()
+        print("--------------------------------")
+        print(ct + "\n" + "Logged out")
+        print("--------------------------------")
+        sql = """UPDATE Time
+            SET LogOut = ?
+            WHERE LogOut = 'NULL'"""
+        cursor.execute(sql,[ct])
+        db.commit()
+        db.close()
+        quit()
+    
+    # Toggling full screen
+    def toggle_fullscreen(self, event=None):
+        self.state = not self.state 
+        self.master.attributes("-fullscreen", self.state)
+        return "break"
+    def end_fullscreen(self, event=None):
+        self.state = False
+        self.master.attributes("-fullscreen", False)
+        return "break"    
+    
+    # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
 class display_booking(): 
     def __init__(self, master):
             self.master = master
@@ -858,8 +909,8 @@ class display_booking():
 
                 # Confirmation Box
                 if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
-                    sql = "UPDATE Bookings SET BookingsID = ? , CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, Driver = ?"
-                    cursor.execute(sql,(bookingid,customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver))
+                    sql = "UPDATE Bookings SET CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, Driver = ? WHERE BookingsID = ?"
+                    cursor.execute(sql,(customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver,bookingid))
 
                     db.commit()
                     clear()
@@ -870,7 +921,6 @@ class display_booking():
             def add_new():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                bookingid = tbookingid.get()
                 customerid = tcustid.get()
                 startstreetnum = tstartstreetnum.get()
                 startstreet = tstartstreet.get()
@@ -1041,57 +1091,7 @@ class display_booking():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"        
-class display_login():
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Display Login")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
-    # Toggling full screen
-    def toggle_fullscreen(self, event=None):
-        self.state = not self.state 
-        self.master.attributes("-fullscreen", self.state)
-        return "break"
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+
 class display_vehicle():
     def __init__(self, master):
         self.master = master
