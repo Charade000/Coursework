@@ -123,6 +123,7 @@ class Home():
             with sqlite3.connect(dbName) as db:
                 cursor=db.cursor()
                 sql ="""CREATE TABLE MasterLogin(
+                    List INTEGER PRIMARY KEY AUTOINCREMENT,
                     StaffEmail TEXT NOT NULL,
                     StaffPassword TEXT NOT NULL)"""
                 cursor.execute(sql)
@@ -254,8 +255,6 @@ class Home():
                 cursor.execute(sql)
                 db.commit()
                 print("---------------------------------------------\nTime Table Created")
-                
-
 class loginMenu():
     def __init__(self, master):
         self.master = master
@@ -756,39 +755,185 @@ class display_customer():
         return "break"    
 class display_login():
     def __init__(self, master):
-        self.master = master
-        self.master.title("Display Login")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
+            self.master = master
+            self.master.title("Display Login")
+            self.master.configure(background='turquoise3')
+            
+            # Binding F11 and ESCAPE keys to full screen
+            self.master.bind("<F11>", self.toggle_fullscreen)
+            self.master.bind("<Escape>", self.end_fullscreen)
+            self.state = True
+            self.master.attributes("-fullscreen", True)
+            
+            # Initialising Strings
+            q=StringVar()
+            tlist=  StringVar()
+            temail = StringVar() 
+            tpass = StringVar()
+            
+            # Button
+            Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
+            # db =sqlite3.connect("main.db")
+            # cursor = db.cursor()
+
+            # Reloads the Database
+            def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                trv.delete(*trv.get_children())
+                for i in rows:
+                    trv.insert('', 'end', values=i)
+                db.close()
+            
+            # Finds Row using SQL
+            def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                q2 = q.get()
+                sql = "SELECT List,StaffEmail,StaffPassword FROM MasterLogin WHERE List LIKE '%"+q2+"' OR StaffEmail LIKE '%"+q2+"' OR StaffPassword LIKE '%"+q2+"'"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+                
+            # Removes Search
+            def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                sql = "SELECT List,StaffEmail,StaffPassword FROM MasterLogin"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+            
+            # Double Click Auto Imports Data Into Entry
+            def getrow(event):
+                rowid = trv.identify_row(event.y)
+                
+                item = trv.item(trv.focus())
+                tlist.set(item['values'][0])
+                temail.set(item['values'][1])
+                tpass.set(item['values'][2])
+                
+            # Change an existing entry
+            def update_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                
+                staffemail = temail.get()
+                stafflist = tlist.get()
+                staffpass = tpass.get()
+                
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
+                    sql = "UPDATE MasterLogin SET StaffEmail = ?, StaffPassword = ? WHERE List = ? "
+                    cursor.execute(sql,(staffemail,staffpass,stafflist))
+
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+            
+            # Adds New Entry
+            def add_new():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffemail = temail.get()
+                staffpass = tpass.get()
+                
+                sql = """INSERT into MasterLogin (StaffEmail, StaffPassword)
+                        VALUES(?,?)"""
+                cursor.execute(sql,((staffemail),(staffpass)))
+                    
+                db.commit()
+                db.close()
+                clear()
+                
+            # Deletes Entry
+            def delete_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                list = tlist.get()
+                staffemail = temail.get()
+                staffpass = tpass.get()
+                if messagebox.askyesno("Warning","This will delete all Logins which have this Email and Password!"):
+                    sql = "DELETE FROM Masterlogin WHERE List = ?"
+                    cursor.execute(sql,((list)))
+                    db.commit()
+                    db.close()
+                    clear()
+                else:
+                    db.close()
+                    return True
+                
+            wrapper1 = LabelFrame(master, text="Login List",bg='turquoise3')
+            wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+            wrapper3 = LabelFrame(master, text="Login Data",bg='turquoise3')
+            wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3), show="headings", height="6")
+            trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            trv.heading(1, text="List")
+            trv.heading(2, text="StaffEmail")
+            trv.heading(3, text="StaffPassword")
+            
+            trv.bind('<Double 1>', getrow)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
+            sql = "SELECT List, StaffEmail, StaffPassword FROM MasterLogin"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            db.close()
+            
+            #search section
+            SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+            SearchLabel.pack(side=tk.LEFT, padx=10)
+            SearchEntry = Entry(wrapper2, textvariable=q)
+            SearchEntry.pack(side=tk.LEFT, padx=6)
+            SearchButton = Button(wrapper2, text="Search",command=search)
+            SearchButton.pack(side=tk.LEFT, padx=6)
+            ClearButton = Button(wrapper2, text="Clear",command=clear)
+            ClearButton.pack(side=tk.LEFT, padx=6)
+            
+            #User Data section
+            StaffEmailLabel = Label(wrapper3, text="Staff Email",bg='turquoise3') ############////////////////''
+            StaffEmailLabel.grid(row=0, column=0, padx=5, pady=3)
+            StaffEmailEntry = Entry(wrapper3, textvariable=temail)
+            StaffEmailEntry.grid(row=0, column=1, padx=5, pady=3)
+            
+            StaffPasswordLabel = Label(wrapper3, text="Staff Password",bg='turquoise3')
+            StaffPasswordLabel.grid(row=1, column=0, padx=5, pady=3)
+            StaffPasswordEntry = Entry(wrapper3, textvariable=tpass)
+            StaffPasswordEntry.grid(row=1, column=1, padx=5, pady=3)
+            
+            StaffListLabel = Label(wrapper3, text="List",bg='turquoise3')
+            StaffListLabel.grid(row=2, column=0, padx=5, pady=3)
+            StaffListEntry = Entry(wrapper3, textvariable=tlist)
+            StaffListEntry.grid(row=2, column=1, padx=5, pady=3)
+            
+            # Buttons
+            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            AddButton = Button(wrapper3, text="Add New", command=add_new)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            UpdateButton.grid(row=13, column=1,padx=5,pady=3)
+            AddButton.grid(row=13, column=0,padx=5,pady=3)
+            DeleteButton.grid(row=13, column=2,padx=5,pady=3)
+            
+            
+            # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -797,14 +942,7 @@ class display_login():
     def end_fullscreen(self, event=None):
         self.state = False
         self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+        return "break"        
 class display_booking(): 
     def __init__(self, master):
             self.master = master
@@ -853,7 +991,7 @@ class display_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+" OR BookingsID LIKE '%"+q2+"''"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -1091,42 +1229,226 @@ class display_booking():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"        
-
 class display_vehicle():
     def __init__(self, master):
-        self.master = master
-        self.master.title("Display Vehicle")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
+            self.master = master
+            self.master.title("Display Vehicle")
+            self.master.configure(background='turquoise3')
+            
+            # Binding F11 and ESCAPE keys to full screen
+            self.master.bind("<F11>", self.toggle_fullscreen)
+            self.master.bind("<Escape>", self.end_fullscreen)
+            self.state = True
+            self.master.attributes("-fullscreen", True)
+            
+            # Initialising Strings
+            q=StringVar()
+            tvehicleid = StringVar() 
+            tmot = StringVar()
+            tmileage = StringVar()
+            tseats = StringVar()
+            tmake = StringVar()
+            tavailability = StringVar() 
+            tstaffid = StringVar()
+            
+            # Button
+            Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
+            # db =sqlite3.connect("main.db")
+            # cursor = db.cursor()
+
+            # Reloads the Database
+            def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                trv.delete(*trv.get_children())
+                for i in rows:
+                    trv.insert('', 'end', values=i)
+                db.close()
+            
+            # Finds Row using SQL
+            def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                q2 = q.get()
+                sql = "SELECT VehicleID,MOT,Mileage,Seats,Make,Availability,StaffID FROM Vehicle WHERE VehicleID LIKE '%"+q2+"' OR MOT LIKE '%"+q2+"' OR Mileage LIKE '%"+q2+"' OR Seats LIKE '%"+q2+"' OR Make LIKE '%"+q2+"' OR Availability LIKE '%"+q2+"' OR StaffID LIKE '%"+q2+"'"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+                
+            # Removes Search
+            def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                sql = "SELECT VehicleID,MOT,Mileage,Seats,Make,Availability,StaffID FROM Vehicle"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+            
+            # Double Click Auto Imports Data Into Entry
+            def getrow(event):
+                rowid = trv.identify_row(event.y)
+                
+                item = trv.item(trv.focus())
+                tvehicleid.set(item['values'][0])
+                tmot.set(item['values'][1])
+                tmileage.set(item['values'][2])
+                tseats.set(item['values'][3])
+                tmake.set(item['values'][4])
+                tavailability.set(item['values'][5])
+                tstaffid.set(item['values'][6])
+                
+            # Change an existing entry
+            def update_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                vehicleid = tvehicleid.get()
+                mot = tmot.get()
+                mileage = tmileage.get()
+                seats = tseats.get()
+                make = tmake.get()
+                availability = tavailability.get()
+                staffid = tstaffid.get()
+                
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Vehicle?"):
+                    sql = "UPDATE Vehicle SET MOT = ? , Mileage = ? , Seats = ? , Make = ? , Availability = ? , StaffID = ? WHERE VehicleID = ?"
+                    cursor.execute(sql,(mot,mileage,seats,make,availability,staffid,vehicleid))
+
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+            
+            # Adds New Entry
+            def add_new():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                vehicleid = tvehicleid.get()
+                mot = tmot.get()
+                mileage = tmileage.get()
+                seats = tseats.get()
+                make = tmake.get()
+                availability = tavailability.get()
+                staffid = tstaffid.get()
+                
+                sql = """INSERT into Vehicle (MOT,Mileage,Seats,Make,Availability,StaffID)
+                        VALUES(?,?,?,?,?,?)"""
+                cursor.execute(sql,((mot),(mileage),(seats),(make),(availability),(staffid)))
+                    
+                db.commit()
+                db.close()
+                clear()
+                
+            # Deletes Entry
+            def delete_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                vehicleid = tvehicleid.get()
+                if messagebox.askyesno("Confirmation","Are you sure you want to delete this Vehicle?"):
+                    sql = "DELETE FROM vehicle WHERE VehicleID = "+vehicleid
+                    cursor.execute(sql)
+                    db.commit()
+                    db.close()
+                    clear()
+                else:
+                    db.close()
+                    return True
+                
+            wrapper1 = LabelFrame(master, text="Vehicle List",bg='turquoise3')
+            wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+            wrapper3 = LabelFrame(master, text="Vehicle Data",bg='turquoise3')
+            wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7), show="headings", height="6")
+            trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            trv.heading(1, text="VehicleID")
+            trv.heading(2, text="MOT")
+            trv.heading(3, text="Mileage")
+            trv.heading(4, text="Seats")
+            trv.heading(5, text="Make")
+            trv.heading(6, text="Availability")
+            trv.heading(7, text="StaffID")
+            
+            trv.bind('<Double 1>', getrow)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
+            sql = "SELECT VehicleID,MOT,Mileage,Seats,Make,Availability,StaffID FROM Vehicle"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            db.close()
+            
+            #search section
+            SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+            SearchLabel.pack(side=tk.LEFT, padx=10)
+            SearchEntry = Entry(wrapper2, textvariable=q)
+            SearchEntry.pack(side=tk.LEFT, padx=6)
+            SearchButton = Button(wrapper2, text="Search",command=search)
+            SearchButton.pack(side=tk.LEFT, padx=6)
+            ClearButton = Button(wrapper2, text="Clear",command=clear)
+            ClearButton.pack(side=tk.LEFT, padx=6)
+            
+            #User Data section
+            vehicleidLabel = Label(wrapper3, text="Vehicle ID",bg='turquoise3') ############////////////////''
+            vehicleidLabel.grid(row=0, column=0, padx=5, pady=3)
+            vehicleidEntry = Entry(wrapper3, textvariable=tvehicleid)
+            vehicleidEntry.grid(row=0, column=1, padx=5, pady=3)
+            
+            motLabel = Label(wrapper3, text="MOT",bg='turquoise3')
+            motLabel.grid(row=1, column=0, padx=5, pady=3)
+            motEntry = Entry(wrapper3, textvariable=tmot)
+            motEntry.grid(row=1, column=1, padx=5, pady=3)
+            
+            mileageLabel = Label(wrapper3, text="Mileage",bg='turquoise3')
+            mileageLabel.grid(row=2, column=0, padx=5, pady=3)
+            mileageEntry = Entry(wrapper3, textvariable=tmileage)
+            mileageEntry.grid(row=2, column=1, padx=5, pady=3)
+            
+            seatsLabel = Label(wrapper3, text="Seats",bg='turquoise3')
+            seatsLabel.grid(row=3, column=0, padx=5, pady=3)
+            seatsEntry = Entry(wrapper3, textvariable=tseats)
+            seatsEntry.grid(row=3, column=1, padx=5, pady=3)
+            
+            makeLabel = Label(wrapper3, text="Make",bg='turquoise3')
+            makeLabel.grid(row=4, column=0, padx=5, pady=3)
+            makeEntry = Entry(wrapper3, textvariable=tmake)
+            makeEntry.grid(row=4, column=1, padx=5, pady=3)
+            
+            availabilityLabel = Label(wrapper3, text="Availability",bg='turquoise3')
+            availabilityLabel.grid(row=5, column=0, padx=5, pady=3)
+            availabilityEntry = Entry(wrapper3, textvariable=tavailability)
+            availabilityEntry.grid(row=5, column=1, padx=5, pady=3)
+            
+            staffLabel = Label(wrapper3, text="Staff ID",bg='turquoise3')
+            staffLabel.grid(row=6, column=0, padx=5, pady=3)
+            staffEntry = Entry(wrapper3, textvariable=tstaffid)
+            staffEntry.grid(row=6, column=1, padx=5, pady=3)
+            
+            
+            # Buttons
+            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            AddButton = Button(wrapper3, text="Add New", command=add_new)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            UpdateButton.grid(row=13, column=1,padx=5,pady=3)
+            AddButton.grid(row=13, column=0,padx=5,pady=3)
+            DeleteButton.grid(row=13, column=2,padx=5,pady=3)
+            
+            
+            # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1135,49 +1457,264 @@ class display_vehicle():
     def end_fullscreen(self, event=None):
         self.state = False
         self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+        return "break"        
 class display_staff():
     def __init__(self, master):
-        self.master = master
-        self.master.title("Display Staff")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
+            self.master = master
+            self.master.title("Display Staff")
+            self.master.configure(background='turquoise3')
+            
+            # Binding F11 and ESCAPE keys to full screen
+            self.master.bind("<F11>", self.toggle_fullscreen)
+            self.master.bind("<Escape>", self.end_fullscreen)
+            self.state = True
+            self.master.attributes("-fullscreen", True)
+            
+            # Initialising Strings
+            q=StringVar()
+            tstaffid = StringVar() 
+            tforename = StringVar()
+            tsurname = StringVar()
+            temail = StringVar()
+            tmobilenum = StringVar()
+            tcapabilities = StringVar() 
+            tavailability = StringVar()
+            tstreetnum = StringVar()
+            tstreetname = StringVar()
+            ttown = StringVar()
+            tpostcode = StringVar() 
+            
+            
+            # Button
+            Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
+            # db =sqlite3.connect("main.db")
+            # cursor = db.cursor()
+
+            # Reloads the Database
+            def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                trv.delete(*trv.get_children())
+                for i in rows:
+                    trv.insert('', 'end', values=i)
+                db.close()
+            
+            # Finds Row using SQL
+            def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                q2 = q.get()
+                sql = "SELECT StaffID,Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode FROM Staff WHERE StaffID LIKE '%"+q2+"' OR Forename LIKE '%"+q2+"' OR Surname LIKE '%"+q2+"' OR Email LIKE '%"+q2+"' OR MobileNum LIKE '%"+q2+"' OR Capabilities LIKE '%"+q2+"' OR Availability LIKE '%"+q2+"' OR StreetNum LIKE '%"+q2+"' OR StreetName LIKE '%"+q2+"' OR Town LIKE '%"+q2+"' OR Postcode LIKE '%"+q2+"'"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+                
+            # Removes Search
+            def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                sql = "SELECT  StaffID,Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode FROM Staff"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+            
+            # Double Click Auto Imports Data Into Entry
+            def getrow(event):
+                rowid = trv.identify_row(event.y)
+                
+                item = trv.item(trv.focus())
+                tstaffid.set(item['values'][0])
+                tforename.set(item['values'][1])
+                tsurname.set(item['values'][2])
+                temail.set(item['values'][3])
+                tmobilenum.set(item['values'][4])
+                tcapabilities.set(item['values'][5])
+                tavailability.set(item['values'][6])
+                tstreetnum.set(item['values'][7])
+                tstreetname.set(item['values'][8])
+                ttown.set(item['values'][9])
+                tpostcode.set(item['values'][10])
+                
+            # Change an existing entry
+            def update_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                forename = tforename.get()
+                surname = tsurname.get()
+                email = temail.get()
+                mobilenum = tmobilenum.get()
+                capabilities = tcapabilities.get()
+                availability = tavailability.get()
+                streetnum = tstreetnum.get()
+                streetname = tstreetname.get()
+                town = ttown.get()
+                postcode = tpostcode.get()
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
+                    sql = "UPDATE Staff SET Forename = ? , Surname = ? , Email = ? , MobileNum = ? , Capabilities = ? , Availability = ? , StreetNum = ? , StreetName = ?, Town = ?, Postcode = ? WHERE StaffID = ?"
+                    cursor.execute(sql,(forename,surname,email,mobilenum,capabilities,availability,streetnum,streetname,town,postcode,staffid))
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+            
+            # Adds New Entry
+            def add_new():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                forename = tforename.get()
+                surname = tsurname.get()
+                email = temail.get()
+                mobilenum = tmobilenum.get()
+                capabilities = tcapabilities.get()
+                availability = tavailability.get()
+                streetnum = tstreetnum.get()
+                streetname = tstreetname.get()
+                town = ttown.get()
+                postcode = tpostcode.get()
+                
+                sql = """INSERT into Staff (Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode)
+                        VALUES(?,?,?,?,?,?,?,?,?,?)"""
+                cursor.execute(sql,((forename),(surname),(email),(mobilenum),(capabilities),(availability),(streetnum),(streetname),(town),(postcode)))
+                db.commit()
+                db.close()
+                clear()
+                
+            # Deletes Entry
+            def delete_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                if messagebox.askyesno("Confirmation","Are you sure you want to delete this Staff?"):
+                    sql = "DELETE FROM Staff WHERE StaffID = "+staffid
+                    cursor.execute(sql)
+                    db.commit()
+                    db.close()
+                    clear()
+                else:
+                    db.close()
+                    return True
+                
+            wrapper1 = LabelFrame(master, text="Staff List",bg='turquoise3')
+            wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+            wrapper3 = LabelFrame(master, text="Staff Data",bg='turquoise3')
+            wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11), show="headings", height="6")
+            trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            trv.heading(1, text="StaffID")
+            trv.heading(2, text="Forename")
+            trv.heading(3, text="Surname")
+            trv.heading(4, text="Email")
+            trv.heading(5, text="Mobile")
+            trv.heading(6, text="Capabilities")
+            trv.heading(7, text="Availability")
+            trv.heading(8, text="StreetNum")
+            trv.heading(9, text="StreetName")
+            trv.heading(10, text="Town")
+            trv.heading(11, text="Postcode")
+            
+            trv.bind('<Double 1>', getrow)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
+            sql = "SELECT StaffID,Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode FROM Staff"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            db.close()
+            
+            #search section
+            SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+            SearchLabel.pack(side=tk.LEFT, padx=10)
+            SearchEntry = Entry(wrapper2, textvariable=q)
+            SearchEntry.pack(side=tk.LEFT, padx=6)
+            SearchButton = Button(wrapper2, text="Search",command=search)
+            SearchButton.pack(side=tk.LEFT, padx=6)
+            ClearButton = Button(wrapper2, text="Clear",command=clear)
+            ClearButton.pack(side=tk.LEFT, padx=6)
+            
+            #User Data section
+            StaffIDLabel = Label(wrapper3, text="Staff ID",bg='turquoise3') 
+            StaffIDLabel.grid(row=0, column=0, padx=5, pady=3)
+            StaffIDEntry = Entry(wrapper3, textvariable=tstaffid)
+            StaffIDEntry.grid(row=0, column=1, padx=5, pady=3)
+            
+            ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+            ForenameLabel.grid(row=1, column=0, padx=5, pady=3)
+            ForenameEntry = Entry(wrapper3, textvariable=tforename)
+            ForenameEntry.grid(row=1, column=1, padx=5, pady=3)
+            
+            SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
+            SurnameLabel.grid(row=2, column=0, padx=5, pady=3)
+            SurnameEntry = Entry(wrapper3, textvariable=tsurname)
+            SurnameEntry.grid(row=2, column=1, padx=5, pady=3)
+            
+            EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
+            EmailLabel.grid(row=3, column=0, padx=5, pady=3)
+            EmailEntry = Entry(wrapper3, textvariable=temail)
+            EmailEntry.grid(row=3, column=1, padx=5, pady=3)
+            
+            MobileNumLabel = Label(wrapper3, text="Mobile Num",bg='turquoise3')
+            MobileNumLabel.grid(row=4, column=0, padx=5, pady=3)
+            MobileNumEntry = Entry(wrapper3, textvariable=tmobilenum)
+            MobileNumEntry.grid(row=4, column=1, padx=5, pady=3)
+            
+            CapabilitiesLabel = Label(wrapper3, text="Capabilities",bg='turquoise3')
+            CapabilitiesLabel.grid(row=5, column=0, padx=5, pady=3)
+            CapabilitiesEntry = Entry(wrapper3, textvariable=tcapabilities)
+            CapabilitiesEntry.grid(row=5, column=1, padx=5, pady=3)
+            
+            AvailabilityLabel = Label(wrapper3, text="Availability",bg='turquoise3')
+            AvailabilityLabel.grid(row=6, column=0, padx=5, pady=3)
+            AvailabilityEntry = Entry(wrapper3, textvariable=tavailability)
+            AvailabilityEntry.grid(row=6, column=1, padx=5, pady=3)
+
+            StreetNumLabel = Label(wrapper3, text="Street Num",bg='turquoise3')
+            StreetNumLabel.grid(row=7, column=0, padx=5, pady=3)
+            StreetNumEntry = Entry(wrapper3, textvariable=tstreetnum)
+            StreetNumEntry.grid(row=7, column=1, padx=5, pady=3)
+            
+            StreetNameLabel = Label(wrapper3, text="Street Name",bg='turquoise3')
+            StreetNameLabel.grid(row=8, column=0, padx=5, pady=3)
+            StreetNameEntry = Entry(wrapper3, textvariable=tstreetname)
+            StreetNameEntry.grid(row=8, column=1, padx=5, pady=3)
+            
+            TownLabel = Label(wrapper3, text="Town",bg='turquoise3')
+            TownLabel.grid(row=9, column=0, padx=5, pady=3)
+            TownEntry = Entry(wrapper3, textvariable=ttown)
+            TownEntry.grid(row=9, column=1, padx=5, pady=3)
+            
+            PostcodeLabel = Label(wrapper3, text="Postcode",bg='turquoise3')
+            PostcodeLabel.grid(row=10, column=0, padx=5, pady=3)
+            PostcodeEntry = Entry(wrapper3, textvariable=tpostcode)
+            PostcodeEntry.grid(row=10, column=1, padx=5, pady=3)
+            
+            # Buttons
+            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            AddButton = Button(wrapper3, text="Add New", command=add_new)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            UpdateButton.grid(row=13, column=1,padx=5,pady=3)
+            AddButton.grid(row=13, column=0,padx=5,pady=3)
+            DeleteButton.grid(row=13, column=2,padx=5,pady=3)
+            
+            
+            # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1187,48 +1724,252 @@ class display_staff():
         self.state = False
         self.master.attributes("-fullscreen", False)
         return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+
 class display_logs():
     def __init__(self, master):
-        self.master = master
-        self.master.title("Display Logs")
-        self.master.configure(background='turquoise3')
-        
-        # Binding F11 and ESCAPE keys to full screen
-        self.master.bind("<F11>", self.toggle_fullscreen)
-        self.master.bind("<Escape>", self.end_fullscreen)
-        self.state = True
-        self.master.attributes("-fullscreen", True)
-        
-        # New_Customer Window Buttons
-        Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
-        Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
-        Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=2)
-    
-    # Quit Program
-    def end(self):
-        t = time()
-        ct = ctime(t)
-        
-        db =sqlite3.connect("main.db")
-        cursor = db.cursor()
-        print("--------------------------------")
-        print(ct + "\n" + "Logged out")
-        print("--------------------------------")
-        sql = """UPDATE Time
-            SET LogOut = ?
-            WHERE LogOut = 'NULL'"""
-        cursor.execute(sql,[ct])
-        db.commit()
-        db.close()
-        quit()
-    
+            self.master = master
+            self.master.title("Display Staff")
+            self.master.configure(background='turquoise3')
+            
+            # Binding F11 and ESCAPE keys to full screen
+            self.master.bind("<F11>", self.toggle_fullscreen)
+            self.master.bind("<Escape>", self.end_fullscreen)
+            self.state = True
+            self.master.attributes("-fullscreen", True)
+            
+            # Initialising Strings
+            q=StringVar()
+            tstaffid = StringVar() 
+            tforename = StringVar()
+            
+            # Button
+            Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
+
+            # Reloads the Database
+            def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                trv.delete(*trv.get_children())
+                for i in rows:
+                    trv.insert('', 'end', values=i)
+                db.close()
+            
+            # Finds Row using SQL
+            def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                q2 = q.get()
+                sql = "SELECT TimeID,Email,LogIn,LogOut FROM Time WHERE TimeID LIKE '%"+q2+"' OR Email LIKE '%"+q2+"' OR LogIn LIKE '%"+q2+"' OR LogOut LIKE '%"+q2+"' "
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+                
+            # Removes Search
+            def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                sql = "SELECT TimeID,Email,LogIn,LogOut FROM Time"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+            
+            # Double Click Auto Imports Data Into Entry
+            def getrow(event):
+                rowid = trv.identify_row(event.y)
+                
+                item = trv.item(trv.focus())
+                tstaffid.set(item['values'][0])
+                tforename.set(item['values'][1])
+                tsurname.set(item['values'][2])
+                temail.set(item['values'][3])
+                tmobilenum.set(item['values'][4])
+                tcapabilities.set(item['values'][5])
+                tavailability.set(item['values'][6])
+                tstreetnum.set(item['values'][7])
+                tstreetname.set(item['values'][8])
+                ttown.set(item['values'][9])
+                tpostcode.set(item['values'][10])
+                
+            # Change an existing entry
+            def update_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                forename = tforename.get()
+                surname = tsurname.get()
+                email = temail.get()
+                mobilenum = tmobilenum.get()
+                capabilities = tcapabilities.get()
+                availability = tavailability.get()
+                streetnum = tstreetnum.get()
+                streetname = tstreetname.get()
+                town = ttown.get()
+                postcode = tpostcode.get()
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
+                    sql = "UPDATE Staff SET TimeID,Email,LogIn,LogOut = ?"
+                    cursor.execute(sql,(TimeID,Email,LogIn,LogOut))
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+            
+            # Adds New Entry
+            def add_new():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                forename = tforename.get()
+                surname = tsurname.get()
+                email = temail.get()
+                mobilenum = tmobilenum.get()
+                capabilities = tcapabilities.get()
+                availability = tavailability.get()
+                streetnum = tstreetnum.get()
+                streetname = tstreetname.get()
+                town = ttown.get()
+                postcode = tpostcode.get()
+                
+                sql = """INSERT into Staff (TimeID,Email,LogIn,LogOut FROM Time)
+                        VALUES(?,?,?,?)"""
+                cursor.execute(sql,((TimeID),(surname),(email),(mobilenum)))
+                db.commit()
+                db.close()
+                clear()
+                
+            # Deletes Entry
+            def delete_customer():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                staffid = tstaffid.get()
+                if messagebox.askyesno("Confirmation","Are you sure you want to delete this Staff?"):
+                    sql = "DELETE FROM Staff WHERE StaffID = "+staffid
+                    cursor.execute(sql)
+                    db.commit()
+                    db.close()
+                    clear()
+                else:
+                    db.close()
+                    return True
+                
+            wrapper1 = LabelFrame(master, text="Staff List",bg='turquoise3')
+            wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+            wrapper3 = LabelFrame(master, text="Staff Data",bg='turquoise3')
+            wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11), show="headings", height="6")
+            trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            trv.heading(1, text="StaffID")
+            trv.heading(2, text="Forename")
+            trv.heading(3, text="Surname")
+            trv.heading(4, text="Email")
+            trv.heading(5, text="Mobile")
+            trv.heading(6, text="Capabilities")
+            trv.heading(7, text="Availability")
+            trv.heading(8, text="StreetNum")
+            trv.heading(9, text="StreetName")
+            trv.heading(10, text="Town")
+            trv.heading(11, text="Postcode")
+            
+            trv.bind('<Double 1>', getrow)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
+            sql = "SELECT StaffID,Forename,Surname,Email,MobileNum,Capabilities,Availability,StreetNum,StreetName,Town,Postcode FROM Staff"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            db.close()
+            
+            #search section
+            SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+            SearchLabel.pack(side=tk.LEFT, padx=10)
+            SearchEntry = Entry(wrapper2, textvariable=q)
+            SearchEntry.pack(side=tk.LEFT, padx=6)
+            SearchButton = Button(wrapper2, text="Search",command=search)
+            SearchButton.pack(side=tk.LEFT, padx=6)
+            ClearButton = Button(wrapper2, text="Clear",command=clear)
+            ClearButton.pack(side=tk.LEFT, padx=6)
+            
+            #User Data section
+            StaffIDLabel = Label(wrapper3, text="Staff ID",bg='turquoise3') 
+            StaffIDLabel.grid(row=0, column=0, padx=5, pady=3)
+            StaffIDEntry = Entry(wrapper3, textvariable=tstaffid)
+            StaffIDEntry.grid(row=0, column=1, padx=5, pady=3)
+            
+            ForenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+            ForenameLabel.grid(row=1, column=0, padx=5, pady=3)
+            ForenameEntry = Entry(wrapper3, textvariable=tforename)
+            ForenameEntry.grid(row=1, column=1, padx=5, pady=3)
+            
+            SurnameLabel = Label(wrapper3, text="Surname",bg='turquoise3')
+            SurnameLabel.grid(row=2, column=0, padx=5, pady=3)
+            SurnameEntry = Entry(wrapper3, textvariable=tsurname)
+            SurnameEntry.grid(row=2, column=1, padx=5, pady=3)
+            
+            EmailLabel = Label(wrapper3, text="Email",bg='turquoise3')
+            EmailLabel.grid(row=3, column=0, padx=5, pady=3)
+            EmailEntry = Entry(wrapper3, textvariable=temail)
+            EmailEntry.grid(row=3, column=1, padx=5, pady=3)
+            
+            MobileNumLabel = Label(wrapper3, text="Mobile Num",bg='turquoise3')
+            MobileNumLabel.grid(row=4, column=0, padx=5, pady=3)
+            MobileNumEntry = Entry(wrapper3, textvariable=tmobilenum)
+            MobileNumEntry.grid(row=4, column=1, padx=5, pady=3)
+            
+            CapabilitiesLabel = Label(wrapper3, text="Capabilities",bg='turquoise3')
+            CapabilitiesLabel.grid(row=5, column=0, padx=5, pady=3)
+            CapabilitiesEntry = Entry(wrapper3, textvariable=tcapabilities)
+            CapabilitiesEntry.grid(row=5, column=1, padx=5, pady=3)
+            
+            AvailabilityLabel = Label(wrapper3, text="Availability",bg='turquoise3')
+            AvailabilityLabel.grid(row=6, column=0, padx=5, pady=3)
+            AvailabilityEntry = Entry(wrapper3, textvariable=tavailability)
+            AvailabilityEntry.grid(row=6, column=1, padx=5, pady=3)
+
+            StreetNumLabel = Label(wrapper3, text="Street Num",bg='turquoise3')
+            StreetNumLabel.grid(row=7, column=0, padx=5, pady=3)
+            StreetNumEntry = Entry(wrapper3, textvariable=tstreetnum)
+            StreetNumEntry.grid(row=7, column=1, padx=5, pady=3)
+            
+            StreetNameLabel = Label(wrapper3, text="Street Name",bg='turquoise3')
+            StreetNameLabel.grid(row=8, column=0, padx=5, pady=3)
+            StreetNameEntry = Entry(wrapper3, textvariable=tstreetname)
+            StreetNameEntry.grid(row=8, column=1, padx=5, pady=3)
+            
+            TownLabel = Label(wrapper3, text="Town",bg='turquoise3')
+            TownLabel.grid(row=9, column=0, padx=5, pady=3)
+            TownEntry = Entry(wrapper3, textvariable=ttown)
+            TownEntry.grid(row=9, column=1, padx=5, pady=3)
+            
+            PostcodeLabel = Label(wrapper3, text="Postcode",bg='turquoise3')
+            PostcodeLabel.grid(row=10, column=0, padx=5, pady=3)
+            PostcodeEntry = Entry(wrapper3, textvariable=tpostcode)
+            PostcodeEntry.grid(row=10, column=1, padx=5, pady=3)
+            
+            # Buttons
+            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            AddButton = Button(wrapper3, text="Add New", command=add_new)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            UpdateButton.grid(row=13, column=1,padx=5,pady=3)
+            AddButton.grid(row=13, column=0,padx=5,pady=3)
+            DeleteButton.grid(row=13, column=2,padx=5,pady=3)
+            
+            
+            # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=showWindow(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
@@ -1237,14 +1978,7 @@ class display_logs():
     def end_fullscreen(self, event=None):
         self.state = False
         self.master.attributes("-fullscreen", False)
-        return "break"    
-    
-    # Return To 'Menu' Screen
-    def back(self):
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+        return "break" 
 
 ########################################################################################################################################################
 ########################################################################################################################################################
