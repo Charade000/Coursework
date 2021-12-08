@@ -30,12 +30,6 @@ map api
 email api
 whatss app Confirmation
 
-###
-Vehichle and customer have hit the list issue
-vehicle cant read adv
-tree view to update and show
-
-like///
 
 https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP-2015.PDF
 103
