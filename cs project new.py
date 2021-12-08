@@ -163,13 +163,13 @@ class Home():
                     Date TEXT NOT NULL,
                     Time TEXT NOT NULL,
                     Forename TEXT NOT NULL,
-                    Driver TEXT NOT NULL)"""
+                    StaffID Integer NOT NULL)"""
                 cursor.execute(sql)
                 db.commit()
                 print("Bookings Table Created")
                 # Adding Fake Data For Testing
-                sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
-                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy","ghj")"""
+                sql ="""INSERT into Bookings(CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID)
+                    VALUES(1,10,"Downing Street","SW1A 2AA",6,"Jameswick Avenue","BB9 5RE","True","16 August 2020","06:30","Dummy","1")"""
                 cursor.execute(sql)
                 
                 db.commit()
@@ -370,13 +370,13 @@ class MasterLogin():
     def checkLogin(self):
         email=self.emailEntry.get()
         password=self.passwordEntry.get()
-        type = "Driver"
+        type = "Staff"
         t = time()
         ct = ctime(t)
         
         db =sqlite3.connect("main.db")
         cursor = db.cursor()
-        sql = """SELECT * from MasterLogin WHERE StaffEmail= ? AND StaffPassword = ? ANd Type = ?"""
+        sql = """SELECT * from MasterLogin WHERE StaffEmail= ? AND StaffPassword = ? AND Type = ?"""
         cursor.execute(sql,[(email),(password),(type)])
         result=cursor.fetchall()
         if result:
@@ -1004,7 +1004,7 @@ class display_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -1014,7 +1014,7 @@ class display_booking():
             def clear():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -1060,7 +1060,7 @@ class display_booking():
 
                 # Confirmation Box
                 if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
-                    sql = "UPDATE Bookings SET CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, Driver = ? WHERE BookingsID = ?"
+                    sql = "UPDATE Bookings SET CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, StaffID = ? WHERE BookingsID = ?"
                     cursor.execute(sql,(customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver,bookingid))
 
                     db.commit()
@@ -1084,7 +1084,7 @@ class display_booking():
                 time = ttime.get()
                 forename = tforename.get()
                 driver = tdriver.get()
-                sql = """INSERT into Bookings (CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
+                sql = """INSERT into Bookings (CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
                 cursor.execute(sql,((customerid),(startstreetnum),(startstreet),(startpost),(deststreetnum),(deststreet),(destpost),(fufilled),(date),(time),(forename),(driver)))
                     
@@ -1129,14 +1129,14 @@ class display_booking():
             trv.heading(10, text="Date")
             trv.heading(11, text="Time")
             trv.heading(12, text="Forename")
-            trv.heading(13, text="Driver")
+            trv.heading(13, text="StaffID")
             
             trv.bind('<Double 1>', getrow)
             
             db =sqlite3.connect("main.db")
             cursor = db.cursor()
             
-            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
+            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
             cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
@@ -1213,7 +1213,7 @@ class display_booking():
             forenameEntry = Entry(wrapper3, textvariable=tforename)
             forenameEntry.grid(row=11, column=1, padx=5, pady=3)
             
-            driverLabel = Label(wrapper3, text="Driver",bg='turquoise3')
+            driverLabel = Label(wrapper3, text="StaffID",bg='turquoise3')
             driverLabel.grid(row=12, column=0, padx=5, pady=3)
             driverEntry = Entry(wrapper3, textvariable=tdriver)
             driverEntry.grid(row=12, column=1, padx=5, pady=3)
@@ -1993,6 +1993,7 @@ class DriverLogin():
     # Connecting To Database To Check Login
     def checkLogin(self):
         email=self.emailEntry.get()
+        email global ##############################///////////////////////
         password=self.passwordEntry.get()
         type = "Driver"
         t = time()
@@ -2060,6 +2061,7 @@ class menuWindow():
             ttime = StringVar() 
             tforename = StringVar()
             tdriver = StringVar()
+            tstaffid = StringVar()
             
             # Button
             Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
@@ -2081,8 +2083,8 @@ class menuWindow():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
-                cursor.execute(sql)
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"' AND WHERE StaffID = ?"
+                cursor.execute(sql,((staffid)))
                 rows = cursor.fetchall()
                 update(rows)
                 db.close()
@@ -2091,7 +2093,7 @@ class menuWindow():
             def clear():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -2137,7 +2139,7 @@ class menuWindow():
 
                 # Confirmation Box
                 if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
-                    sql = "UPDATE Bookings SET CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, Driver = ? WHERE BookingsID = ?"
+                    sql = "UPDATE Bookings SET CustomerID = ? , StartStreetNum = ? , StartStreet = ? , StartPostcode = ? , DestinationStreetNum = ? , DestinationStreet = ? , DestinationPostcode = ? , Fufilled = ? ,Date = ?, Time = ?, Forename = ?, StaffID = ? WHERE BookingsID = ?"
                     cursor.execute(sql,(customerid,startstreetnum,startstreet,startpost,deststreetnum,deststreet,destpost,fufilled,date,time,forename,driver,bookingid))
 
                     db.commit()
@@ -2161,7 +2163,7 @@ class menuWindow():
                 time = ttime.get()
                 forename = tforename.get()
                 driver = tdriver.get()
-                sql = """INSERT into Bookings (CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver)
+                sql = """INSERT into Bookings (CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID)
                         VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"""
                 cursor.execute(sql,((customerid),(startstreetnum),(startstreet),(startpost),(deststreetnum),(deststreet),(destpost),(fufilled),(date),(time),(forename),(driver)))
                     
@@ -2206,14 +2208,14 @@ class menuWindow():
             trv.heading(10, text="Date")
             trv.heading(11, text="Time")
             trv.heading(12, text="Forename")
-            trv.heading(13, text="Driver")
+            trv.heading(13, text="StaffID")
             
             trv.bind('<Double 1>', getrow)
             
             db =sqlite3.connect("main.db")
             cursor = db.cursor()
             
-            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,Driver FROM Bookings"
+            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
             cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
@@ -2290,7 +2292,7 @@ class menuWindow():
             forenameEntry = Entry(wrapper3, textvariable=tforename)
             forenameEntry.grid(row=11, column=1, padx=5, pady=3)
             
-            driverLabel = Label(wrapper3, text="Driver",bg='turquoise3')
+            driverLabel = Label(wrapper3, text="StaffID",bg='turquoise3')
             driverLabel.grid(row=12, column=0, padx=5, pady=3)
             driverEntry = Entry(wrapper3, textvariable=tdriver)
             driverEntry.grid(row=12, column=1, padx=5, pady=3)
@@ -2309,7 +2311,7 @@ class menuWindow():
         self.master.withdraw()
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=showWindow(root2)
+        muGUI=DriverLogin(root2)
     # Toggling full screen
     def toggle_fullscreen(self, event=None):
         self.state = not self.state 
