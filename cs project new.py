@@ -342,7 +342,7 @@ class MasterLogin():
         Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
 
-        Button(self.master,text='temp bypass',command=self.tempbypass,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
+        Button(self.master,text='temp bypass',command=self.menu,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
 
     
     # Quit Program
@@ -400,13 +400,7 @@ class MasterLogin():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=MasterMenu(root2)
-    
-    def tempbypass(self):
-        
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=MasterMenu(root2)
+
 
 class MasterMenu():
     def __init__(self, master):
@@ -1949,13 +1943,14 @@ class DriverLogin():
         self.master.attributes("-fullscreen", True)
         
         type=StringVar()
+        self.a=StringVar()
         
         # Login Page Labels
         Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
         Label(self.master,text='Password',bg='turquoise3',font='Bembo',fg='black').grid(row=3,column=0)
         
         # Entry Page Entry
-        self.emailEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
+        self.emailEntry=Entry(self.master,textvariable=self.a,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35)
         self.emailEntry.grid(row=2,column=2,pady=10,columnspan=2)
         self.passwordEntry=Entry(self.master,bg='PaleTurquoise1',bd=0,font='Bembo',fg='black',width=35,show = "*")
         self.passwordEntry.grid(row=3,column=2,columnspan=2)
@@ -1966,7 +1961,7 @@ class DriverLogin():
         Button(self.master,text='Login',command=self.checkLogin,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=2)
         Button(self.master,text='Quit',command=self.end,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=4)
 
-        Button(self.master,text='temp bypass',command=self.tempbypass,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
+        Button(self.master,text='temp bypass',command=self.menu,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=5)
 
     
     # Quit Program
@@ -1993,7 +1988,6 @@ class DriverLogin():
     # Connecting To Database To Check Login
     def checkLogin(self):
         email=self.emailEntry.get()
-        email global ##############################///////////////////////
         password=self.passwordEntry.get()
         type = "Driver"
         t = time()
@@ -2004,7 +1998,6 @@ class DriverLogin():
         sql = """SELECT * from MasterLogin WHERE StaffEmail= ? AND StaffPassword = ? AND Type = ?"""
         cursor.execute(sql,[(email),(password),(type)])
         result=cursor.fetchall()
-        print("test")
         if result:
             print("--------------------------------")
             print(ct + "\n" + email + " has logged in")
@@ -2014,7 +2007,6 @@ class DriverLogin():
             cursor.execute(sql,[(email),(ct),('NULL')])
             db.commit()
             db.close()
-            print("Test 2")
             self.menu()
         else:
             print("Login Failed")
@@ -2023,19 +2015,16 @@ class DriverLogin():
 
     # Redirecting After Login Page
     def menu(self):
+        self.email=self.a.get()
         self.master.withdraw()
         root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
-    
-    def tempbypass(self):
+        #root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=menuWindow(root2,self.email)
         
-        self.master.withdraw()
-        root2=Toplevel(self.master)
-        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
-        muGUI=menuWindow(root2)
 class menuWindow():
-    def __init__(self, master):
+    def __init__(self, master,emailEntry):
+            self.emailEntry=emailEntry
+            print(self.emailEntry)
             self.master = master
             self.master.title("Display Booking")
             self.master.configure(background='turquoise3')
@@ -2066,11 +2055,8 @@ class menuWindow():
             # Button
             Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
 
-            # db =sqlite3.connect("main.db")
-            # cursor = db.cursor()
-
             # Reloads the Database
-            def update(rows):
+            def update(rows):#####
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 trv.delete(*trv.get_children())
@@ -2080,21 +2066,33 @@ class menuWindow():
             
             # Finds Row using SQL
             def search():
+                email = self.emailEntry.get()
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"' AND WHERE StaffID = ?"
-                cursor.execute(sql,((staffid)))
+                #staffid from email
+                sql = "SELECT Staff.StaffID FROM Staff WHERE Staff.Email = ?"
+                cursor.execute(sql,((email)))
+                staffid = cursor.fetchall()#######################c
+                print("y",staffid)
+                sql = """SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings 
+                WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"' AND WHERE StaffID = ?"""
+                cursor.execute(sql,(staffid,))
                 rows = cursor.fetchall()
                 update(rows)
                 db.close()
                 
             # Removes Search
             def clear():
+                #email = self.emailEntry 
+                print("X",self.emailEntry)
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
-                cursor.execute(sql)
+                sql = "SELECT Staff.StaffID FROM Staff WHERE Staff.Email = ?"
+                cursor.execute(sql,(self.emailEntry,))
+                staffid = cursor.fetchall()
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE StaffID = ?"
+                cursor.execute(sql,((staffid)))
                 rows = cursor.fetchall()
                 update(rows)
                 db.close()
@@ -2185,6 +2183,8 @@ class menuWindow():
                 else:
                     db.close()
                     return True
+                
+            clear()
                 
             wrapper1 = LabelFrame(master, text="Bookings List",bg='turquoise3')
             wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
