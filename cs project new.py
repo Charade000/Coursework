@@ -302,7 +302,6 @@ class MasterLogin(Home):
         self.state = True
         self.master.attributes("-fullscreen", True)
         
-        type=StringVar()
         
         # Login Page Labels
         Label(self.master,text='Email',bg='turquoise3',font='Bembo',fg='black').grid(row=2,column=0,pady=10)
@@ -364,7 +363,7 @@ class MasterLogin(Home):
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=MasterMenu(root2)
-        
+
 class MasterMenu(Home):
     def __init__(self, master):
         self.master = master
@@ -2055,9 +2054,149 @@ class DriverMenu():
         muGUI=DriverLogin(root2)
         
     def viewtable(self):
-        pass
-    
-    
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=indi_table(root2)
+class indi_table(Home):
+    def __init__(self, master):
+            self.master = master
+            super().toggle_fullscreen
+            self.master.title("Timetable")
+            self.master.configure(background='turquoise3')
+            
+            # Binding F11 and ESCAPE keys to full screen
+            self.master.bind("<F11>", self.toggle_fullscreen)
+            self.master.bind("<Escape>", self.end_fullscreen)
+            self.state = True
+            self.master.attributes("-fullscreen", True)
+            
+            # Initialising Strings
+            q=StringVar()
+            tbookingid = StringVar() 
+            tcustid = StringVar()
+            tstartstreetnum = StringVar()
+            tstartstreet = StringVar()
+            tstartpost = StringVar()
+            tdeststreetnum = StringVar() 
+            tdeststreet = StringVar()
+            tdestpost = StringVar()
+            tfufilled = StringVar()
+            tdate = StringVar()
+            ttime = StringVar() 
+            tforename = StringVar()
+            tdriver = StringVar()
+            
+            # Button
+            Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
+
+            # Reloads the Database
+            def update(rows):
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                trv.delete(*trv.get_children())
+                for i in rows:
+                    trv.insert('', 'end', values=i)
+                db.close()
+            
+            # Finds Row using SQL
+            def search():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                q2 = q.get()
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+                
+            # Removes Search
+            def clear():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                update(rows)
+                db.close()
+
+            
+            # Double Click Auto Imports Data Into Entry
+            def getrow(event):
+                rowid = trv.identify_row(event.y)
+                
+                item = trv.item(trv.focus())
+                tbookingid.set(item['values'][0])
+                tcustid.set(item['values'][1])
+                tstartstreetnum.set(item['values'][2])
+                tstartstreet.set(item['values'][3])
+                tstartpost.set(item['values'][4])
+                tdeststreetnum.set(item['values'][5])
+                tdeststreet.set(item['values'][6])
+                tdestpost.set(item['values'][7])
+                tfufilled.set(item['values'][8])
+                tdate.set(item['values'][9])
+                ttime.set(item['values'][10])
+                tforename.set(item['values'][11])
+                tdriver.set(item['values'][12])
+                
+                
+            wrapper1 = LabelFrame(master, text="Bookings List",bg='turquoise3')
+            wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
+
+            wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
+            wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
+
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), show="headings", height="6")
+            trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            trv.heading(1, text="BookingID")
+            trv.heading(2, text="CustomerID")
+            trv.heading(3, text="StartStreetNum")
+            trv.heading(4, text="StartStreet")
+            trv.heading(5, text="StartStreetPostcode")
+            trv.heading(6, text="DestinationStreetNum")
+            trv.heading(7, text="DestinationStreet")
+            trv.heading(8, text="DestinationStreetPostcode")
+            trv.heading(9, text="Fufilled")
+            trv.heading(10, text="Date")
+            trv.heading(11, text="Time")
+            trv.heading(12, text="Forename")
+            trv.heading(13, text="StaffID")
+            
+            trv.bind('<Double 1>', getrow)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            
+            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            update(rows)
+            db.close()
+            
+            #search section
+            SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
+            SearchLabel.pack(side=tk.LEFT, padx=10)
+            SearchEntry = Entry(wrapper2, textvariable=q)
+            SearchEntry.pack(side=tk.LEFT, padx=6)
+            SearchButton = Button(wrapper2, text="Search",command=search)
+            SearchButton.pack(side=tk.LEFT, padx=6)
+            ClearButton = Button(wrapper2, text="Clear",command=clear)
+            ClearButton.pack(side=tk.LEFT, padx=6)
+            
+
+            
+            
+            # Return To 'Menu' Screen
+    def back(self):
+        self.master.withdraw()
+        root2=Toplevel(self.master)
+        root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
+        muGUI=DriverMenu(root2)
+
+
 def main():
     root=Tk()
     myGUIWelcome=Home(root)
