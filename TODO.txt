@@ -15,7 +15,6 @@ middleman for drivers. When 'available' drivers can choose to logins
 
 on new booking there should be a drop down bar which shows customers to select
 
-create the document with qa and email
 
 1) recreate the layout
 2) data structures
@@ -56,10 +55,11 @@ REFERENCES:
 https://pretagteam.com/question/python-tkinter-window-fullscreen
 https://www.youtube.com/watch?v=i4qLI9lmkqw
 
-Things to add to 
+Things to add to   2078 + 2 more placees
 paramatized sqlite
 aggregate sql max min
 regular expressions
 inheritance ( for full screen, copies over function)
 data structure
 matplotlib 
+drop down lst for cust and staffid (prevent double bookings) on bookings bookings page
