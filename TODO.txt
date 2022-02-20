@@ -1,9 +1,4 @@
-1.Automate cost. map api, use postcode        6
-2.Regular expressions to check correct format eg. postcode    5
-3.Email api   ,   whatsapp confirmation
-5.Hash passwords and salts                 1
-6.Data structure stacks, queues           3
-7.recursive      ,clock            4
+
 
 https://filestore.aqa.org.uk/resources/computing/specifications/AQA-7516-7517-SP-2015.PDF
 
@@ -48,18 +43,16 @@ interview
 Has not got a database needs to be combined    easier to manage   need a unified system   filetr by place    separate bookings
 website
 
-fix def names in treeview
 
 REFERENCES:
 
 https://pretagteam.com/question/python-tkinter-window-fullscreen
 https://www.youtube.com/watch?v=i4qLI9lmkqw
+https://flexiple.com/convert-list-to-string-python/
 
 Things to add to   2078 + 2 more placees
-paramatized sqlite
-aggregate sql max min
+
 regular expressions
-inheritance ( for full screen, copies over function)
 data structure
 matplotlib 
 drop down lst for cust and staffid (prevent double bookings) on bookings bookings page

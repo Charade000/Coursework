@@ -640,8 +640,16 @@ class display_customer():
         wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
         wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
         
-        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5), show="headings", height="6")
+        tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+        tree_scrollx.pack(side=BOTTOM, fill="x")
+            
+        tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+        tree_scrolly.pack(side=RIGHT, fill="y")
+        
+        trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
         trv.pack(fill="both", expand="yes",padx=20,pady=10)
+        tree_scrollx.config(command = trv.xview)
+        tree_scrolly.config(command = trv.yview)
         trv.heading(1, text="CustomerID")
         trv.heading(2, text="Firstname")
         trv.heading(3, text="Lastname")
@@ -781,7 +789,7 @@ class display_login():
                 ttype.set(item['values'][3])
                 
             # Change an existing entry
-            def update_customer():
+            def update_login():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 
@@ -792,7 +800,7 @@ class display_login():
                 
 
                 # Confirmation Box
-                if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Login?"):
                     sql = "UPDATE MasterLogin SET StaffEmail = ?, StaffPassword = ?, Type = ? WHERE List = ? "
                     cursor.execute(sql,(staffemail,staffpass,type,stafflist))
 
@@ -818,7 +826,7 @@ class display_login():
                 clear()
                 
             # Deletes Entry
-            def delete_customer():
+            def delete_login():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 list = tlist.get()
@@ -839,9 +847,16 @@ class display_login():
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
             
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), show="headings", height="6")
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="List")
             trv.heading(2, text="StaffEmail")
             trv.heading(3, text="StaffPassword")
@@ -891,9 +906,9 @@ class display_login():
             TypeEntry.grid(row=2, column=1, padx=5, pady=3)
             
             # Buttons
-            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            UpdateButton = Button(wrapper3, text="Update", command=update_login)
             AddButton = Button(wrapper3, text="Add New", command=add_new)
-            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_login)
             UpdateButton.grid(row=13, column=1,padx=5,pady=3)
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
@@ -962,7 +977,7 @@ class display_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"' ORDER BY Time ASC"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -972,7 +987,7 @@ class display_booking():
             def clear():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
+                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings ORDER BY Time ASC"
                 cursor.execute(sql)
                 rows = cursor.fetchall()
                 update(rows)
@@ -998,7 +1013,7 @@ class display_booking():
                 tdriver.set(item['values'][12])
                 
             # Change an existing entry
-            def update_customer():
+            def update_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 bookingid = tbookingid.get()
@@ -1051,7 +1066,7 @@ class display_booking():
                 clear()
                 
             # Deletes Entry
-            def delete_customer():
+            def delete_booking():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 bookingid = tbookingid.get()
@@ -1072,9 +1087,16 @@ class display_booking():
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
             
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), show="headings", height="6")
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="BookingID")
             trv.heading(2, text="CustomerID")
             trv.heading(3, text="StartStreetNum")
@@ -1094,7 +1116,7 @@ class display_booking():
             db =sqlite3.connect("main.db")
             cursor = db.cursor()
             
-            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
+            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings ORDER BY Time ASC"
             cursor.execute(sql)
             rows = cursor.fetchall()
             update(rows)
@@ -1177,9 +1199,9 @@ class display_booking():
             driverEntry.grid(row=12, column=1, padx=5, pady=3)
             
             # Buttons
-            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            UpdateButton = Button(wrapper3, text="Update", command=update_booking)
             AddButton = Button(wrapper3, text="Add New", command=add_new)
-            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_booking)
             UpdateButton.grid(row=13, column=1,padx=5,pady=3)
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
@@ -1273,7 +1295,7 @@ class display_vehicle():
                 tstaffid.set(item['values'][6])
                 
             # Change an existing entry
-            def update_customer():
+            def update_vehicle():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 vehicleid = tvehicleid.get()
@@ -1282,13 +1304,13 @@ class display_vehicle():
                 seats = tseats.get()
                 make = tmake.get()
                 availability = tavailability.get()
-                staffid = tstaffid.get()
+                staff = tstaffid.get()
                 
 
                 # Confirmation Box
                 if messagebox.askyesno("Confirmation","Are you sure you want to update this Vehicle?"):
                     sql = "UPDATE Vehicle SET MOT = ? , Mileage = ? , Seats = ? , Make = ? , Availability = ? , StaffID = ? WHERE VehicleID = ?"
-                    cursor.execute(sql,(mot,mileage,seats,make,availability,staffid,vehicleid))
+                    cursor.execute(sql,(mot,mileage,seats,make,availability,staff,vehicleid))
 
                     db.commit()
                     clear()
@@ -1305,18 +1327,19 @@ class display_vehicle():
                 seats = tseats.get()
                 make = tmake.get()
                 availability = tavailability.get()
-                staffid = tstaffid.get()
+                staff = tstaffid.get()
+                
                 
                 sql = """INSERT into Vehicle (MOT,Mileage,Seats,Make,Availability,StaffID)
                         VALUES(?,?,?,?,?,?)"""
-                cursor.execute(sql,((mot),(mileage),(seats),(make),(availability),(staffid)))
+                cursor.execute(sql,((mot),(mileage),(seats),(make),(availability),(staff)))
                     
                 db.commit()
                 db.close()
                 clear()
                 
             # Deletes Entry
-            def delete_customer():
+            def delete_vehicle():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 vehicleid = tvehicleid.get()
@@ -1337,9 +1360,17 @@ class display_vehicle():
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
             
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7), show="headings", height="6")
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
+            
+
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="VehicleID")
             trv.heading(2, text="MOT")
             trv.heading(3, text="Mileage")
@@ -1407,9 +1438,9 @@ class display_vehicle():
             
             
             # Buttons
-            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            UpdateButton = Button(wrapper3, text="Update", command=update_vehicle)
             AddButton = Button(wrapper3, text="Add New", command=add_new)
-            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_vehicle)
             UpdateButton.grid(row=13, column=1,padx=5,pady=3)
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
@@ -1511,7 +1542,7 @@ class display_staff():
                 tpostcode.set(item['values'][10])
                 
             # Change an existing entry
-            def update_customer():
+            def update_staff():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 staffid = tstaffid.get()
@@ -1527,7 +1558,7 @@ class display_staff():
                 postcode = tpostcode.get()
 
                 # Confirmation Box
-                if messagebox.askyesno("Confirmation","Are you sure you want to update this Booking?"):
+                if messagebox.askyesno("Confirmation","Are you sure you want to update this Staff?"):
                     sql = "UPDATE Staff SET Forename = ? , Surname = ? , Email = ? , MobileNum = ? , Capabilities = ? , Availability = ? , StreetNum = ? , StreetName = ?, Town = ?, Postcode = ? WHERE StaffID = ?"
                     cursor.execute(sql,(forename,surname,email,mobilenum,capabilities,availability,streetnum,streetname,town,postcode,staffid))
                     db.commit()
@@ -1559,7 +1590,7 @@ class display_staff():
                 clear()
                 
             # Deletes Entry
-            def delete_customer():
+            def delete_staff():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 staffid = tstaffid.get()
@@ -1580,9 +1611,17 @@ class display_staff():
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
             
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11), show="headings", height="6")
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
+            
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="StaffID")
             trv.heading(2, text="Forename")
             trv.heading(3, text="Surname")
@@ -1673,9 +1712,9 @@ class display_staff():
             PostcodeEntry.grid(row=10, column=1, padx=5, pady=3)
             
             # Buttons
-            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            UpdateButton = Button(wrapper3, text="Update", command=update_staff)
             AddButton = Button(wrapper3, text="Add New", command=add_new)
-            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_staff)
             UpdateButton.grid(row=13, column=1,padx=5,pady=3)
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
@@ -1699,7 +1738,7 @@ class display_staff():
 class display_logs():
     def __init__(self, master):
             self.master = master
-            self.master.title("Display Staff")
+            self.master.title("Display Logs")
             self.master.configure(background='turquoise3')
             
             # Binding F11 and ESCAPE keys to full screen
@@ -1761,7 +1800,7 @@ class display_logs():
                 tlogout.set(item['values'][3])
                 
             # Change an existing entry
-            def update_customer():
+            def update_logs():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 timeid = ttimeid.get()
@@ -1795,7 +1834,7 @@ class display_logs():
                 clear()
                 
             # Deletes Entry
-            def delete_customer():
+            def delete_logs():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 timeid = ttimeid.get()
@@ -1816,9 +1855,16 @@ class display_logs():
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
             
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), show="headings", height="6")
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
+            
+            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4), xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="TimeID")
             trv.heading(2, text="Email")
             trv.heading(3, text="Login")
@@ -1867,9 +1913,9 @@ class display_logs():
             LogOutEntry.grid(row=3, column=1, padx=5, pady=3)
             
             # Buttons
-            UpdateButton = Button(wrapper3, text="Update", command=update_customer)
+            UpdateButton = Button(wrapper3, text="Update", command=update_logs)
             AddButton = Button(wrapper3, text="Add New", command=add_new)
-            DeleteButton = Button(wrapper3, text="Delete", command=delete_customer)
+            DeleteButton = Button(wrapper3, text="Delete", command=delete_logs)
             UpdateButton.grid(row=13, column=1,padx=5,pady=3)
             AddButton.grid(row=13, column=0,padx=5,pady=3)
             DeleteButton.grid(row=13, column=2,padx=5,pady=3)
@@ -2058,6 +2104,7 @@ class DriverMenu():
         root2=Toplevel(self.master)
         root2.geometry("{0}x{1}+0+0".format(root2.winfo_screenwidth(), root2.winfo_screenheight()))
         muGUI=indi_table(root2)
+
 class indi_table(Home):
     def __init__(self, master):
             self.master = master
@@ -2087,6 +2134,26 @@ class indi_table(Home):
             tforename = StringVar()
             tdriver = StringVar()
             
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            q2 = q.get()
+            
+            
+            sql = "SELECT Email FROM Time ORDER BY TimeID DESC"
+            cursor.execute(sql)
+            lastlogin = cursor.fetchall()
+            lastlogin = str(lastlogin[0])
+            lastlogin = (lastlogin[2:-3])
+            print(lastlogin)
+            sql = "SELECT Staff.StaffID FROM Staff,Time,MasterLogin WHERE Staff.Email = ? AND Staff.Email = MasterLogin.StaffEmail AND MasterLogin.Type = 'Driver'"
+            cursor.execute(sql,[(lastlogin)])
+            driver = cursor.fetchall()
+            driver = ' '.join(map(str, driver))
+            driver = driver[1:2]
+            print(driver)
+            
+            db.close()
+            
             # Button
             Button(self.master,text='Back',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black').pack(padx=20,pady=20)
 
@@ -2104,8 +2171,8 @@ class indi_table(Home):
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
                 q2 = q.get()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings WHERE Forename LIKE '%"+q2+"' OR Driver LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"'"
-                cursor.execute(sql)
+                sql = "SELECT Time,Date,Bookings.CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Customer.Forename,StaffID,BookingsID FROM Bookings,Customer WHERE Customer.Forename = Bookings.Forename AND Bookings.StaffID = ? AND (Forename LIKE '%"+q2+"' OR Date LIKE '%"+q2+"' OR StartPostcode LIKE '%"+q2+"' OR CustomerID LIKE '%"+q2+"' OR Fufilled LIKE '%"+q2+"' OR StartStreet LIKE '%"+q2+"' OR BookingsID LIKE '%"+q2+"' OR DestinationStreet LIKE '%"+q2+"' OR DestinationPostcode LIKE '%"+q2+"') ORDER BY Time ASC"
+                cursor.execute(sql,[(driver)])
                 rows = cursor.fetchall()
                 update(rows)
                 db.close()
@@ -2114,8 +2181,8 @@ class indi_table(Home):
             def clear():
                 db =sqlite3.connect("main.db")
                 cursor = db.cursor()
-                sql = "SELECT BookingsID,CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
-                cursor.execute(sql)
+                sql = "SELECT BookingsID,Bookings.CustomerID,StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Customer.Forename,StaffID FROM Bookings,Customer WHERE Customer.Forename = Bookings.Forename AND Bookings.StaffID = ? ORDER BY Time ASC"
+                cursor.execute(sql,[(driver)])
                 rows = cursor.fetchall()
                 update(rows)
                 db.close()
@@ -2140,6 +2207,38 @@ class indi_table(Home):
                 tforename.set(item['values'][11])
                 tdriver.set(item['values'][12])
                 
+            # Change an existing entry
+            def fulfilled_true():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                booking = tbookingid.get()
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to change to True?"):
+                    sql = "UPDATE Bookings SET Fufilled = 'True' WHERE BookingsID = ?"
+                    cursor.execute(sql,(booking))
+
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+                
+            # Change an existing entry
+            def fulfilled_false():
+                db =sqlite3.connect("main.db")
+                cursor = db.cursor()
+                booking = tbookingid.get()
+
+                # Confirmation Box
+                if messagebox.askyesno("Confirmation","Are you sure you want to change to False?"):
+                    sql = "UPDATE Bookings SET Fufilled = 'False' WHERE BookingsID = ?"
+                    cursor.execute(sql,(booking))
+
+                    db.commit()
+                    clear()
+                db.commit()
+                db.close()
+                
                 
             wrapper1 = LabelFrame(master, text="Bookings List",bg='turquoise3')
             wrapper2 = LabelFrame(master, text="Search",bg='turquoise3')
@@ -2147,10 +2246,20 @@ class indi_table(Home):
             wrapper1.pack(fill="both", expand="yes",padx=20,pady=10)
             wrapper2.pack(fill="both", expand="yes",padx=20,pady=10)
 
+            tree_scrollx = Scrollbar(wrapper1, orient ="horizontal")
+            tree_scrollx.pack(side=BOTTOM, fill="x")
             
+            tree_scrolly = Scrollbar(wrapper1, orient ="vertical")
+            tree_scrolly.pack(side=RIGHT, fill="y")
             
-            trv = ttk.Treeview(wrapper1, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), show="headings", height="6")
+            wrapper3 = LabelFrame(master, text="Booking Data",bg='turquoise3')
+            wrapper3.pack(fill="both", expand="yes",padx=20,pady=10)
+
+            
+            trv = ttk.Treeview(wrapper1, xscrollcommand = tree_scrollx.set, yscrollcommand = tree_scrolly.set, columns=(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), show="headings", height="6")
             trv.pack(fill="both", expand="yes",padx=20,pady=10)
+            tree_scrollx.config(command = trv.xview)
+            tree_scrolly.config(command = trv.yview)
             trv.heading(1, text="BookingID")
             trv.heading(2, text="CustomerID")
             trv.heading(3, text="StartStreetNum")
@@ -2165,16 +2274,20 @@ class indi_table(Home):
             trv.heading(12, text="Forename")
             trv.heading(13, text="StaffID")
             
+            
+            
             trv.bind('<Double 1>', getrow)
             
             db =sqlite3.connect("main.db")
             cursor = db.cursor()
             
-            sql = "SELECT BookingsID, CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Forename,StaffID FROM Bookings"
-            cursor.execute(sql)
+            sql = "SELECT BookingsID, Bookings.CustomerID, StartStreetNum,StartStreet,StartPostcode,DestinationStreetNum,DestinationStreet,DestinationPostcode,Fufilled,Date,Time,Customer.Forename,StaffID FROM Bookings,Customer WHERE Customer.Forename = Bookings.Forename AND Bookings.StaffID = ? ORDER BY Time ASC"
+            cursor.execute(sql,[(driver)])
             rows = cursor.fetchall()
             update(rows)
             db.close()
+            
+            
             
             #search section
             SearchLabel = Label(wrapper2, text="Search",bg='turquoise3')
@@ -2186,8 +2299,99 @@ class indi_table(Home):
             ClearButton = Button(wrapper2, text="Clear",command=clear)
             ClearButton.pack(side=tk.LEFT, padx=6)
             
-
             
+            #User Data section
+            BookIDLabel = Label(wrapper3, text="Booking ID",bg='turquoise3') 
+            BookIDLabel.grid(row=0, column=0, padx=5, pady=3)
+            BookIDEntry = Entry(wrapper3, textvariable=tbookingid)
+            BookIDEntry.grid(row=0, column=1, padx=5, pady=3)
+            
+            CustIDLabel = Label(wrapper3, text="Customer ID",bg='turquoise3')
+            CustIDLabel.grid(row=1, column=0, padx=5, pady=3)
+            CustIDEntry = Entry(wrapper3, textvariable=tcustid)
+            CustIDEntry.grid(row=1, column=1, padx=5, pady=3)
+            
+            startstreetnumLabel = Label(wrapper3, text="Start Street Num",bg='turquoise3')
+            startstreetnumLabel.grid(row=2, column=0, padx=5, pady=3)
+            startstreetnumEntry = Entry(wrapper3, textvariable=tstartstreetnum)
+            startstreetnumEntry.grid(row=2, column=1, padx=5, pady=3)
+            
+            startstreetLabel = Label(wrapper3, text="Start Street",bg='turquoise3')
+            startstreetLabel.grid(row=3, column=0, padx=5, pady=3)
+            startstreetEntry = Entry(wrapper3, textvariable=tstartstreet)
+            startstreetEntry.grid(row=3, column=1, padx=5, pady=3)
+            
+            startpostLabel = Label(wrapper3, text="Start Postcode",bg='turquoise3')
+            startpostLabel.grid(row=4, column=0, padx=5, pady=3)
+            startpostEntry = Entry(wrapper3, textvariable=tstartpost)
+            startpostEntry.grid(row=4, column=1, padx=5, pady=3)
+            
+            deststreetnumLabel = Label(wrapper3, text="Dest Street Num",bg='turquoise3')
+            deststreetnumLabel.grid(row=5, column=0, padx=5, pady=3)
+            deststreetnumEntry = Entry(wrapper3, textvariable=tdeststreetnum)
+            deststreetnumEntry.grid(row=5, column=1, padx=5, pady=3)
+            
+            DestStreetLabel = Label(wrapper3, text="Dest Street",bg='turquoise3')
+            DestStreetLabel.grid(row=6, column=0, padx=5, pady=3)
+            DestStreetEntry = Entry(wrapper3, textvariable=tdeststreet)
+            DestStreetEntry.grid(row=6, column=1, padx=5, pady=3)
+            
+            destpostLabel = Label(wrapper3, text="Dest Postcode",bg='turquoise3')
+            destpostLabel.grid(row=7, column=0, padx=5, pady=3)
+            destpostEntry = Entry(wrapper3, textvariable=tdestpost)
+            destpostEntry.grid(row=7, column=1, padx=5, pady=3)
+            
+            fufilledLabel = Label(wrapper3, text="Fufilled",bg='turquoise3')
+            fufilledLabel.grid(row=8, column=0, padx=5, pady=3)
+            fufilledEntry = Entry(wrapper3, textvariable=tfufilled)
+            fufilledEntry.grid(row=8, column=1, padx=5, pady=3)
+            
+            dateLabel = Label(wrapper3, text="Date",bg='turquoise3')
+            dateLabel.grid(row=9, column=0, padx=5, pady=3)
+            dateEntry = Entry(wrapper3, textvariable=tdate)
+            dateEntry.grid(row=9, column=1, padx=5, pady=3)
+            
+            timeLabel = Label(wrapper3, text="Time",bg='turquoise3')
+            timeLabel.grid(row=10, column=0, padx=5, pady=3)
+            timeEntry = Entry(wrapper3, textvariable=ttime)
+            timeEntry.grid(row=10, column=1, padx=5, pady=3)
+            
+            forenameLabel = Label(wrapper3, text="Forename",bg='turquoise3')
+            forenameLabel.grid(row=11, column=0, padx=5, pady=3)
+            forenameEntry = Entry(wrapper3, textvariable=tforename)
+            forenameEntry.grid(row=11, column=1, padx=5, pady=3)
+            
+            driverLabel = Label(wrapper3, text="StaffID",bg='turquoise3')
+            driverLabel.grid(row=12, column=0, padx=5, pady=3)
+            driverEntry = Entry(wrapper3, textvariable=tdriver)
+            driverEntry.grid(row=12, column=1, padx=5, pady=3)
+            
+            # Buttons
+            fulfilledButton = Button(wrapper3, text="Change Availability To True", command=fulfilled_true)
+            unfulfilledButton = Button(wrapper3, text="Change Availability To False", command=fulfilled_false)
+            fulfilledButton.grid(row=13, column=1,padx=5,pady=3)
+            unfulfilledButton.grid(row=13, column=0,padx=5,pady=3)
+            
+            db =sqlite3.connect("main.db")
+            cursor = db.cursor()
+            list= []
+            sql ="SELECT MIN(Date) FROM Bookings"
+            cursor.execute(sql)
+            date = cursor.fetchall()
+            date = str(date)
+            date = date[3:-4]
+            list.append(date)
+            sql ="SELECT MIN(Time) FROM Bookings WHERE Date = ?"
+            cursor.execute(sql,[(date)])
+            latest = cursor.fetchall()
+            list.insert(0,latest)
+            print(latest)
+            db.close()
+            
+            latestLabel = Label(wrapper3, text="Next Booking:",bg='turquoise3', fg = "red")
+            latestLabel.grid(row=13, column=2, padx=10, pady=3)
+            latestlabelLabel = Label(wrapper3, text=list,bg='turquoise3', fg = "red")
+            latestlabelLabel.grid(row=13, column=3, pady=3)
             
             # Return To 'Menu' Screen
     def back(self):
