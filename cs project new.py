@@ -4,6 +4,7 @@ from tkinter import ttk
 import sqlite3
 from time import time,ctime
 from tkinter import messagebox
+import re
 
 
 class Home():
@@ -616,11 +617,17 @@ class display_customer():
             lname = tsname.get()
             num= tnum.get()
             email = temail.get()
-            sql = """INSERT into Customer(Forename,Surname,Email,MobileNum)
-                    VALUES(?,?,?,?)"""
-            cursor.execute(sql,((fname),(lname),(email),(num)))
-            db.commit()
-            clear()
+            
+            regular=num
+            x=re.search("/d",regular)
+            if x:
+                sql = """INSERT into Customer(Forename,Surname,Email,MobileNum)
+                VALUES(?,?,?,?)"""
+                cursor.execute(sql,((fname),(lname),(email),(num)))
+                db.commit()
+                clear()
+            else:
+                failLabel = Label(wrapper3, text="Fail | Enter a valid number",bg='red').grid(row=13, column = 3)
             
         # Deletes Entry
         def delete_customer():
@@ -817,13 +824,29 @@ class display_login():
                 staffpass = tpass.get()
                 type = ttype.get()
                 
-                sql = """INSERT into MasterLogin (StaffEmail, StaffPassword, Type)
-                        VALUES(?,?,?)"""
-                cursor.execute(sql,((staffemail),(staffpass),(type)))
-                    
-                db.commit()
-                db.close()
-                clear()
+                x = False
+                y = False
+                
+                regular=staffemail
+                reg=type
+                
+                if re.search("^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$",regular):
+                    x = True
+                if re.search("^Driver|Staff$",reg):
+                    y =True
+                if x == True and y == True:
+                    print(x)
+                    print(y)
+                    sql = """INSERT into MasterLogin (StaffEmail, StaffPassword, Type)
+                            VALUES(?,?,?)"""
+                    cursor.execute(sql,((staffemail),(staffpass),(type)))
+                        
+                    db.commit()
+                    db.close()
+                    clear()
+                else:
+                    failLabel = Label(wrapper3, text="Fail | Incorrect Format ",bg='red').grid(row=13, column = 3)
+
                 
             # Deletes Entry
             def delete_login():
