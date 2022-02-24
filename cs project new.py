@@ -25,7 +25,7 @@ class Home():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
 
         # 'Home' Page Buttons
@@ -257,7 +257,7 @@ class loginMenu(Home):
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
 
         # Login Page Buttons#]#]
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=1,column=3)
@@ -300,7 +300,7 @@ class MasterLogin(Home):
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         
         # Login Page Labels
@@ -376,7 +376,7 @@ class MasterMenu(Home):
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         # Menu Up Page Buttons
         Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
@@ -452,7 +452,7 @@ class showWindow():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         # Sign Up Page Buttons
         Button(self.master,text='Full Screen',command=self.toggle_fullscreen,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=1)
@@ -548,7 +548,7 @@ class display_customer():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         # Initialising Strings
         q=StringVar()
@@ -733,7 +733,7 @@ class display_login():
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
@@ -939,7 +939,7 @@ class display_booking():
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
@@ -1233,7 +1233,7 @@ class display_vehicle():
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
@@ -1471,7 +1471,7 @@ class display_staff():
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
@@ -1745,7 +1745,7 @@ class display_logs():
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
@@ -1950,7 +1950,7 @@ class DriverLogin():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         type=StringVar()
         self.a=StringVar()
@@ -2040,7 +2040,7 @@ class DriverMenu():
         self.master.bind("<F11>", self.toggle_fullscreen)
         self.master.bind("<Escape>", self.end_fullscreen)
         self.state = True
-        self.master.attributes("-fullscreen", True)
+        self.master.attributes("-fullscreen", False)
         
         # Menu Up Page Buttons
         Button(self.master,text='Log Out',command=self.back,bg='PaleTurquoise1',activebackground='turquoise3',bd=0,font='Bembo',fg='black',height=7,width=18).grid(row=0,column=0)
@@ -2116,7 +2116,7 @@ class indi_table(Home):
             self.master.bind("<F11>", self.toggle_fullscreen)
             self.master.bind("<Escape>", self.end_fullscreen)
             self.state = True
-            self.master.attributes("-fullscreen", True)
+            self.master.attributes("-fullscreen", False)
             
             # Initialising Strings
             q=StringVar()
